@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rental Property Analyzer | Red Beard Investments</title>
+<meta name="description" content="Estimates only. A private, in-browser rental property calculator. Not a rate quote, loan approval, tax or financial advice.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect fill=%22%231B2A41%22 width=%2232%22 height=%2232%22 rx=%224%22/%3E%3Ctext x=%2216%22 y=%2222%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2213%22 fill=%22%23F3F5F7%22%3ERB%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#F3F5F7;
+  --card:#fff;
+  --inset:#E8EDF2;
+  --kpi:#E6EBEF;
+  --ink:#1A2332;
+  --muted:#4A5560;
+  --navy:#1B2A41;
+  --rust:#C2472C;
+  --rust-dk:#9A2F1C;
+  --accent:#1B2A41;
+  --slate:#4A6580;
+  --line:#D4DCE4;
+  --line-d:#9AA4B0;
+  --input:#E6EEF5;
+  --input-ink:#1B2A41;
+  --ovr:#EDE6E2;
+  --key:#F3E0DB;
+  --ok-bg:#DCEDE0;
+  --ok:#1B5C2E;
+  --fail-bg:#F7D9D6;
+  --fail:#8E2218;
+  --shadow:0 6px 18px rgba(20,30,45,.10);
+  --font-body:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-display:Georgia,"Palatino Linotype",Palatino,"Times New Roman",serif;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--font-body)}
+img,svg{max-width:100%;display:block}
+button,input,select,textarea{font:inherit}
+.skip{position:absolute;left:-999px;top:0;background:#fff;color:var(--ink);padding:8px 12px;z-index:20}
+.skip:focus{left:8px;top:8px}
+.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+.top{background:var(--navy);color:#fff;padding:18px 0 0;box-shadow:var(--shadow);border-bottom:3px solid var(--rust)}
+.top .brand{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 24px;padding-bottom:16px}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#F0D0C6}
+.top h1{font-family:var(--font-display);font-size:clamp(26px,5vw,40px);line-height:1.15;margin:4px 0 0;font-weight:700;flex:1 1 240px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.disclaimer{margin:0;background:var(--fail-bg);color:var(--fail);padding:10px 0;font-size:13.5px;line-height:1.45;font-style:italic}
+.disclaimer .wrap{padding:0}
+.jump{display:flex;flex-wrap:nowrap;gap:6px;padding:10px 0 8px;position:sticky;top:0;background:var(--bg);z-index:8;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (min-width:900px){.jump{flex-wrap:wrap;overflow:visible}}
+.jump a{color:var(--accent);text-decoration:none;font-size:13px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;min-height:36px;display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto}
+.jump a:hover,.jump a:focus{background:var(--inset);outline:2px solid var(--accent);outline-offset:1px}
+.btn{appearance:none;border:1px solid #fff;background:#fff;color:var(--accent);font:700 15px/1.2 var(--font-body);padding:10px 16px;border-radius:10px;cursor:pointer;min-height:44px}
+.btn:hover,.btn:focus{background:var(--kpi);outline:2px solid #fff;outline-offset:1px}
+.btn-sec{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.btn-sec:hover{background:rgba(255,255,255,.12);color:#fff}
+section.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--rust);border-radius:var(--radius);padding:22px 18px;margin:0 0 18px;box-shadow:var(--shadow);scroll-margin-top:64px}
+h2{font-family:var(--font-display);font-size:clamp(22px,3vw,28px);line-height:1.25;margin:0 0 8px;color:var(--accent)}
+h3{font-family:var(--font-display);font-size:19px;margin:22px 0 10px;color:var(--accent)}
+h3:first-child{margin-top:0}
+.sec-help{margin:0 0 16px;color:var(--muted);font-size:15px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 8px}
+@media (min-width:800px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--kpi);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi .value{font-family:var(--font-display);font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--accent);margin-top:4px;word-break:break-word}
+.kpi.ok{background:var(--ok-bg)}
+.kpi.ok .value{color:var(--ok)}
+.kpi.fail{background:var(--fail-bg)}
+.kpi.fail .value{color:var(--fail)}
+.kpi.neg{background:var(--fail-bg)}
+.kpi.neg .value{color:var(--fail)}
+.grid{display:grid;gap:12px 18px}
+@media (min-width:800px){
+  .grid-2{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr 1fr 1fr}
+}
+.field{display:flex;flex-direction:column;gap:4px}
+.field>span,.field>label{font-size:13.5px;color:var(--ink);font-weight:600}
+.hint{font-size:12.5px;color:var(--muted);font-weight:400;display:block}
+input[type="text"],input[type="number"],select,textarea{
+  width:100%;background:var(--input);color:var(--input-ink);border:1px solid var(--line-d);
+  border-radius:8px;padding:10px 12px;min-height:44px
+}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.readonly,output,.calc{
+  display:block;background:var(--bg);color:var(--ink);border:1px solid var(--line);
+  border-radius:8px;padding:10px 12px;min-height:44px;font-variant-numeric:tabular-nums
+}
+.ovr input,.ovr select{background:var(--ovr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pair .sub{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.keyrow{background:var(--key);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:700;color:var(--rust-dk)}
+.okpill,.failpill{display:inline-block;font-weight:700;padding:2px 8px;border-radius:6px;font-size:13px}
+.okpill{background:var(--ok-bg);color:var(--ok)}
+.failpill{background:var(--fail-bg);color:var(--fail)}
+.na{color:var(--muted)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 4px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:right;white-space:nowrap;vertical-align:middle}
+th:first-child,td:first-child,td.left,th.left{text-align:left;white-space:normal}
+thead th{background:var(--accent);color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em;position:sticky;top:0}
+tbody tr:nth-child(even){background:var(--inset)}
+tbody tr:last-child td{border-bottom:0}
+td.key{background:var(--key);font-weight:700;color:var(--rust-dk)}
+tr.keyrow-tr td{background:var(--key);font-weight:700;color:var(--rust-dk)}
+td.okcell{background:var(--ok-bg);color:var(--ok);font-weight:700}
+td.neg{color:var(--fail)}
+.units input{min-height:38px;padding:6px 8px;width:100%}
+.units td{padding:4px 6px}
+.note{font-size:13.5px;color:var(--muted);margin:12px 0 0}
+.regz{background:var(--inset);border-left:4px solid var(--rust);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;color:var(--ink);margin:0 0 16px}
+.program-note{background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink);margin-top:12px}
+.charts{display:grid;gap:16px}
+@media (min-width:900px){.charts{grid-template-columns:1fr 1fr}}
+.chart{background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:12px}
+.chart h3{margin:0 0 8px;font-size:17px}
+.chart svg{width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.sticky-col td:first-child, .sticky-col th:first-child{position:sticky;left:0;background:inherit;z-index:1}
+thead.sticky-col th:first-child, .sticky-col thead th:first-child{background:var(--accent)}
+.compare-head select{min-width:140px;font-size:13px;color:var(--input-ink);min-height:38px;padding:6px}
+footer{padding:24px 0 40px;color:var(--muted);font-size:13.5px}
+footer p{margin:0 0 8px}
+.saved{font-size:12px;color:var(--muted);margin:6px 0 0}
+details.advanced{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--inset)}
+details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padding:6px 0}
+@media print{
+  :root{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  @page{size:letter;margin:.55in .5in .6in}
+  body{background:#fff;font-size:11.5px;line-height:1.4}
+  .skip,.jump,.actions,.btn,details.advanced{display:none !important}
+  .top{background:var(--accent);padding:8px 0 0;box-shadow:none}
+  .top h1{font-size:22px;color:#fff}
+  .disclaimer{font-size:10.5px;padding:6px 0;font-style:italic}
+  .wrap{width:auto;margin:0}
+  section.card{break-inside:auto;box-shadow:none;margin:0 0 14px;padding:12px 12px;border-radius:6px}
+  .chart,.kpis,.table-wrap{break-inside:avoid}
+  #inputs,#results,#five-year,#comparison,#amortization,#projection{break-before:page}
+  h2{font-size:18px}
+  h3{font-size:14px;margin:12px 0 6px}
+  .kpis{grid-template-columns:repeat(4,1fr);gap:6px}
+  .kpi .value{font-size:14px}
+  input,select,textarea,.readonly,output,.calc{min-height:0;padding:4px 6px;border-color:var(--line)}
+  input,select{color:var(--ink);background:var(--input)}
+  .table-wrap{overflow:visible;border:0}
+  table{font-size:10px}
+  th,td{padding:4px 5px}
+  .chart{break-inside:avoid}
+  footer{padding-top:8px}
+  a{color:inherit;text-decoration:none}
+  .print-only{display:block}
+  #rent-roll tr.empty-unit{display:none}
+  .jump{display:none !important}
+  section.card{scroll-margin-top:0}
+}
+.print-only{display:none}
+.chart svg{overflow:visible}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap brand">
+    <div>
+      <p class="eyebrow">Red Beard Investments</p>
+      <h1>Rental Property Analyzer</h1>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="btn-print">Download PDF</button>
+      <button type="button" class="btn btn-sec" id="btn-clear">Clear my data</button>
+    </div>
+  </div>
+  <div class="disclaimer"><p class="wrap">Estimates only, not a rate quote, loan approval, tax or financial advice. Confirm terms with a lender and tax advisor.</p></div>
+</header>
+<nav class="jump wrap" aria-label="Page sections">
+  <a href="#dashboard">Dashboard</a>
+  <a href="#inputs">Inputs</a>
+  <a href="#results">Results</a>
+  <a href="#proforma">Current vs pro forma</a>
+  <a href="#five-year">5-year returns</a>
+  <a href="#growth">Growth</a>
+  <a href="#comparison">Loan comparison</a>
+  <a href="#amortization">Amortization</a>
+  <a href="#projection">30-year projection</a>
+</nav>
+<main id="main" class="wrap">
+
+<section id="dashboard" class="card">
+  <h2>Dashboard</h2>
+  <p class="sec-help">Headline figures for <strong data-out="propName" data-fmt="text"></strong> using <strong data-out="loanName" data-fmt="text"></strong>. Figures update as you change the inputs below.</p>
+  <div class="kpis">
+    <div class="kpi" data-kpi="cfm"><div class="label">Monthly cash flow</div><div class="value" data-out="cfm" data-fmt="usd2"></div></div>
+    <div class="kpi" data-kpi="cfa"><div class="label">Annual cash flow</div><div class="value" data-out="cfa" data-fmt="usd"></div></div>
+    <div class="kpi" data-kpi="coc"><div class="label">Cash-on-cash</div><div class="value" data-out="coc" data-fmt="pct"></div></div>
+    <div class="kpi"><div class="label">Cap rate</div><div class="value" data-out="cap" data-fmt="pct"></div></div>
+    <div class="kpi"><div class="label">NOI (annual)</div><div class="value" data-out="noia" data-fmt="usd"></div></div>
+    <div class="kpi"><div class="label">Monthly PITIA</div><div class="value" data-out="pitia" data-fmt="usd2"></div></div>
+    <div class="kpi"><div class="label">Total cash invested</div><div class="value" data-out="cashin" data-fmt="usd"></div></div>
+    <div class="kpi"><div class="label">Break-even occupancy</div><div class="value" data-out="beo" data-fmt="pct1"></div></div>
+    <div class="kpi" data-kpi="dscrnp"><div class="label">DSCR (NOI method)</div><div class="value"><span data-out="dscrn" data-fmt="x"></span> <span data-out="dscrnp" data-fmt="pass"></span></div></div>
+    <div class="kpi" data-kpi="dscrlp"><div class="label">DSCR (rent / PITIA)</div><div class="value"><span data-out="dscrl" data-fmt="x"></span> <span data-out="dscrlp" data-fmt="pass"></span></div></div>
+    <div class="kpi" data-kpi="onepctp"><div class="label">1% rule</div><div class="value"><span data-out="onepct" data-fmt="pct"></span> <span data-out="onepctp" data-fmt="pass"></span></div></div>
+    <div class="kpi"><div class="label">IRR at hold period</div><div class="value" data-out="hold.irr" data-fmt="pct"></div></div>
+  </div>
+  <div class="charts">
+    <div class="chart">
+      <h3>Year-1 monthly cash flow by loan type</h3>
+      <div id="chart-cf"></div>
+      <p class="hint">Uses each program’s example defaults, not your selected-loan overrides. Negative bars fall below the zero line.</p>
+    </div>
+    <div class="chart">
+      <h3>30-year value, loan balance and equity</h3>
+      <div id="chart-eq"></div>
+      <div class="legend">
+        <span><i style="background:#C2472C"></i>Property value</span>
+        <span><i style="background:#4A6580"></i>Loan balance</span>
+        <span><i style="background:#1B5C2E"></i>Equity</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="inputs" class="card">
+  <h2>Inputs</h2>
+  <p class="sec-help">Shaded input cells are yours to edit. Sample numbers are illustrative only. Optional loan overrides sit next to each program default and apply only to the selected loan — not to the comparison table.</p>
+
+  <h3>Property and purchase</h3>
+  <div class="grid grid-2">
+    <label class="field">Property name / address<input type="text" name="propName"></label>
+    <label class="field">Number of units <span class="hint">Informational (FHA house hack is for 2–4 units).</span><input type="number" name="units" min="1" step="1"></label>
+    <label class="field">Purchase price<input type="number" name="price" min="0" step="1"></label>
+    <label class="field">Closing costs (buyer, excluding loan points and fees) <span class="hint">Title, recording, inspection, appraisal, prepaids.</span><input type="number" name="closingCosts" min="0" step="1"></label>
+    <label class="field">Rehab / initial repairs<input type="number" name="rehab" min="0" step="1"></label>
+    <label class="field">After-repair / current value (ARV) <span class="hint">Used for BRRRR refi sizing and as the starting value for appreciation. Leave at 0 to use purchase price.</span><input type="number" name="arv" min="0" step="1"></label>
+  </div>
+
+  <h3>Unit rent roll (up to 20 units)</h3>
+  <p class="hint">Totals drive analysis rent when the rent source is “Unit table.” Leave unused rows blank.</p>
+  <div class="table-wrap">
+    <table class="units" id="rent-roll">
+      <thead><tr><th class="left">Unit</th><th>Beds</th><th>Baths</th><th>Current rent</th><th>Market rent</th></tr></thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr><th class="left">Total</th><td data-out="bedsTotal" data-fmt="num"></td><td data-out="bathsTotal" data-fmt="num"></td><td data-out="unitCurTotal" data-fmt="usd"></td><td data-out="unitMktTotal" data-fmt="usd"></td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <h3>Income</h3>
+  <div class="grid grid-2">
+    <label class="field">Rent source for analysis
+      <select name="rentSource">
+        <option>Unit table (current rents)</option>
+        <option>Unit table (market rents)</option>
+        <option>Manual total</option>
+      </select>
+    </label>
+    <label class="field">Total monthly rent — manual entry <span class="hint">Used when the source is Manual, or if the unit table is empty.</span><input type="number" name="rentManual" min="0" step="1"></label>
+    <label class="field">Other monthly income (pet, laundry, storage)<input type="number" name="otherInc" min="0" step="1"></label>
+    <label class="field">Vacancy and credit loss % <span class="hint">Common underwriting range 5–10%.</span><input type="number" name="vacancy" min="0" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Owner-unit rent forgone (house-hack programs only) <span class="hint">Monthly market rent of the unit you would live in. Subtracted only when the selected program is owner-occupied (for example, FHA).</span><input type="number" name="forgoneRent" min="0" step="1"></label>
+  </div>
+  <p class="note">Analysis rent: <strong data-out="rent" data-fmt="usd"></strong> &nbsp;·&nbsp; Pro forma (market) rent: <strong data-out="proFormaRent" data-fmt="usd"></strong></p>
+
+  <h3>Operating expenses</h3>
+  <div class="grid grid-2">
+    <label class="field">Property tax (annual)<input type="number" name="propTax" min="0" step="1"></label>
+    <label class="field">Insurance (annual)<input type="number" name="insurance" min="0" step="1"></label>
+    <label class="field">HOA (monthly)<input type="number" name="hoa" min="0" step="1"></label>
+    <label class="field">Maintenance / repairs (% of gross rent)<input type="number" name="maintPct" min="0" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">CapEx reserve (% of gross rent)<input type="number" name="capexPct" min="0" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Property management (% of gross rent) <span class="hint">Common 8–12%. Set 0% if self-managing.</span><input type="number" name="mgmtPct" min="0" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Owner-paid utilities (monthly)<input type="number" name="utilities" min="0" step="1"></label>
+    <label class="field">Lawn care / snow removal (monthly)<input type="number" name="lawnSnow" min="0" step="1"></label>
+    <label class="field">Other expenses (monthly)<input type="number" name="otherExp" min="0" step="1"></label>
+  </div>
+
+  <h3>Growth and exit</h3>
+  <div class="grid grid-2">
+    <label class="field">Appreciation (annual %)<input type="number" name="appreciation" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Rent growth (annual %)<input type="number" name="rentGrowth" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Expense growth (annual %) <span class="hint">Applies to tax, insurance, HOA, utilities, lawn, other. Percent-of-rent items follow rent.</span><input type="number" name="expGrowth" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Selling costs at exit (% of value)<input type="number" name="sellCost" step="0.1" data-unit="pct" data-places="2"></label>
+    <label class="field">Hold period for summary IRR (years, 1–30)<input type="number" name="holdYears" min="1" max="30" step="1"></label>
+  </div>
+
+  <h3>Underwriting targets</h3>
+  <div class="grid grid-2">
+    <label class="field">Minimum DSCR — NOI method (NOI / annual debt service) <span class="hint">Commercial/portfolio style; many lenders want 1.20–1.25×.</span><input type="number" name="minDscrNoi" min="0" step="0.01"></label>
+    <label class="field">Minimum DSCR — lender gross-rent method (rent / PITIA) <span class="hint">Typical DSCR-loan minimum about 1.00×.</span><input type="number" name="minDscrLender" min="0" step="0.01"></label>
+  </div>
+
+  <h3>Second mortgage (optional)</h3>
+  <p class="hint">Set the amount to 0 if none. A second mortgage reduces cash invested (net of its closing costs) and is included in PITIA, cash flow, DSCR, the projection and loan balance.</p>
+  <div class="grid grid-2">
+    <label class="field">2nd mortgage amount<input type="number" name="secAmt" min="0" step="1"></label>
+    <label class="field">2nd mortgage interest rate %<input type="number" name="secRate" min="0" step="0.001" data-unit="pct" data-places="3"></label>
+    <label class="field">2nd mortgage term (years, fully amortizing)<input type="number" name="secTerm" min="0" step="1"></label>
+    <label class="field">2nd mortgage closing costs<input type="number" name="secClose" min="0" step="1"></label>
+  </div>
+
+  <h3>Tax estimates</h3>
+  <p class="hint">Estimate only — not tax advice. Confirm with a CPA.</p>
+  <div class="grid grid-2">
+    <label class="field">Improved value % (building share of basis) <span class="hint">Land is not depreciable. Use the assessor land/building split as a starting point.</span><input type="number" name="improvedPct" min="0" max="100" step="0.1" data-unit="pct" data-places="1"></label>
+    <label class="field">Marginal income tax rate % <span class="hint">Combined federal + state marginal rate.</span><input type="number" name="taxRate" min="0" max="100" step="0.1" data-unit="pct" data-places="1"></label>
+  </div>
+  <p class="note">Depreciable basis: <strong data-out="deprBasis" data-fmt="usd"></strong> &nbsp;·&nbsp; Annual depreciation (27.5-yr straight line): <strong data-out="annualDepr" data-fmt="usd"></strong></p>
+
+  <h3>BRRRR / refinance settings</h3>
+  <p class="hint">Used only by programs whose loan basis is “ARV Refi.”</p>
+  <div class="grid grid-2">
+    <label class="field">Months from purchase to refinance<input type="number" name="brrrrMonths" min="0" step="1"></label>
+    <label class="field">HELOC / bridge rate on purchase + rehab funds %<input type="number" name="helocRate" min="0" step="0.001" data-unit="pct" data-places="3"></label>
+    <label class="field">Refinance third-party closing costs <span class="hint">Appraisal, title, recording. Lender points and fees come from the program.</span><input type="number" name="refiCosts" min="0" step="1"></label>
+  </div>
+
+  <h3>Loan program</h3>
+  <div class="regz">The rates, points, fees and terms listed for each loan program are <strong>example assumptions</strong> drawn from published ranges as of November 2026. They are not advertised rates, not a rate quote, and not an offer to lend. Estimated payments are calculated from the numbers on this page, not from an advertised payment. Confirm actual terms with a lender.</div>
+  <div class="grid grid-2">
+    <label class="field">Selected loan type
+      <select name="loanChoice" id="loan-choice"></select>
+    </label>
+  </div>
+  <div class="table-wrap" style="margin-top:12px">
+    <table id="overrides">
+      <thead><tr><th class="left">Loan parameter</th><th>Program default (example)</th><th>Your override</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="program-note" id="program-note"></div>
+
+  <details class="advanced">
+    <summary>Edit example program defaults (including Custom A and Custom B)</summary>
+    <p class="hint">These are still examples, not offered rates. Changes here feed the comparison table and the “program default” column. Your overrides above still win for the selected loan.</p>
+    <div class="table-wrap" id="programs-wrap"></div>
+  </details>
+  <p class="saved" id="save-msg"></p>
+</section>
+
+<section id="results" class="card">
+  <h2>Results — selected loan</h2>
+  <p class="sec-help">Live results for the loan chosen above. PASS / FAIL marks use the minimum DSCR figures you entered.</p>
+  <h3>Loan sizing</h3>
+  <div class="table-wrap">
+    <table>
+      <tbody id="tbl-sizing"></tbody>
+    </table>
+  </div>
+  <h3>Monthly payment</h3>
+  <div class="table-wrap">
+    <table>
+      <tbody id="tbl-pmt"></tbody>
+    </table>
+  </div>
+  <h3>Monthly income and expenses (year 1)</h3>
+  <div class="table-wrap">
+    <table>
+      <tbody id="tbl-inc"></tbody>
+    </table>
+  </div>
+  <h3>Key metrics</h3>
+  <div class="table-wrap">
+    <table>
+      <tbody id="tbl-metrics"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="proforma" class="card">
+  <h2>Current vs pro forma</h2>
+  <p class="sec-help">The pro forma column swaps in market rents from the rent roll (or the analysis rent if no market rents are entered). Expenses that are a percent of rent follow that rent. Debt service is the selected loan.</p>
+  <div class="table-wrap">
+    <table id="tbl-proforma" class="sticky-col"></table>
+  </div>
+</section>
+
+<section id="five-year" class="card">
+  <h2>5-year tax estimate, debt paydown and total return</h2>
+  <p class="sec-help">Tax figures are rough estimates (straight-line 27.5-year depreciation on the improved share of price + closing + rehab; interest from the amortization schedule). Actual benefit depends on net rental income, passive-loss limits, depreciation recapture and your tax situation. Not tax advice; consult a CPA.</p>
+  <h3>Tax deduction summary (estimate)</h3>
+  <div class="table-wrap"><table id="tbl-tax"></table></div>
+  <h3>Debt paydown</h3>
+  <div class="table-wrap"><table id="tbl-paydown"></table></div>
+  <h3>Total return on investment, years 1–5</h3>
+  <div class="table-wrap"><table id="tbl-roi"></table></div>
+</section>
+
+<section id="growth" class="card">
+  <h2>Rent growth and appreciation</h2>
+  <div class="grid grid-2">
+    <div>
+      <h3>20-year rent growth</h3>
+      <p class="hint">Gross scheduled rent used in the analysis, grown at your rent-growth assumption.</p>
+      <div class="table-wrap"><table id="tbl-rentg"></table></div>
+    </div>
+    <div>
+      <h3>10-year appreciation</h3>
+      <p class="hint">Starting from the value basis (ARV, or purchase price if ARV is 0).</p>
+      <div class="table-wrap"><table id="tbl-appr"></table></div>
+    </div>
+  </div>
+</section>
+
+<section id="comparison" class="card">
+  <h2>Side-by-side loan comparison</h2>
+  <p class="sec-help">Pick any program in each column. This table uses each program’s example defaults and the same property inputs. Selected-loan overrides are not applied here.</p>
+  <div class="table-wrap"><table id="tbl-compare" class="sticky-col"></table></div>
+</section>
+
+<section id="amortization" class="card">
+  <h2>Yearly amortization summary</h2>
+  <p class="sec-help">Handles fixed rates, interest-only periods, an ARM reset at the assumed reset rate, and mortgage insurance drop-off. A balloon month is flagged; the balance then continues as if refinanced on the same terms.</p>
+  <div class="table-wrap"><table id="tbl-amort"></table></div>
+</section>
+
+<section id="projection" class="card">
+  <h2>30-year projection and IRR</h2>
+  <p class="sec-help">Year 1 is the first year of stabilized operation. Fixed expenses grow at the expense-growth rate; percent-of-rent expenses follow rent. IRR assumes a sale at the end of that year, net of selling costs. Prepayment penalties are not modeled.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="label">Hold period</div><div class="value" data-out="hold.years" data-fmt="num"></div></div>
+    <div class="kpi"><div class="label">Cumulative cash flow</div><div class="value" data-out="hold.cum_cf" data-fmt="usd"></div></div>
+    <div class="kpi"><div class="label">Net sale proceeds</div><div class="value" data-out="hold.net_sale" data-fmt="usd"></div></div>
+    <div class="kpi"><div class="label">Total profit</div><div class="value" data-out="hold.profit" data-fmt="usd"></div></div>
+    <div class="kpi"><div class="label">IRR</div><div class="value" data-out="hold.irr" data-fmt="pct"></div></div>
+    <div class="kpi"><div class="label">Equity multiple</div><div class="value" data-out="hold.equity_multiple" data-fmt="x"></div></div>
+    <div class="kpi"><div class="label">Average annual cash-on-cash</div><div class="value" data-out="hold.avg_coc" data-fmt="pct"></div></div>
+    <div class="kpi"><div class="label">Total cash invested</div><div class="value" data-out="hold.cashin" data-fmt="usd"></div></div>
+  </div>
+  <div class="table-wrap"><table id="tbl-proj" class="sticky-col"></table></div>
+</section>
+
+</main>
+<footer class="wrap">
+  <p><strong>Red Beard Investments</strong></p>
+  <p>Estimates only, not a rate quote, loan approval, tax or financial advice. Confirm terms with a lender and tax advisor. Example loan program rates, points and fees are illustrative assumptions, not offered or advertised terms.</p>
+  <p>This page runs entirely on your device. It does not send your numbers anywhere, and it uses no cookies or analytics. If you choose to save, a copy is stored only in this browser. Use “Clear my data” to remove it.</p>
+  <p class="print-only">Printed from the Rental Property Analyzer. Figures are estimates as of the date of printing.</p>
+</footer>
+
+
+<script>
+/* Rental Property Analyzer engine.
+   Ports the live formulas from the companion Excel workbook.
+   No I/O, no network. Works in the browser and in Node. */
+(function (root) {
+  "use strict";
+
+  const PROGRAMS = [
+    {name:"Conventional Investment 30yr (25% down)",category:"Conventional",down:0.25,rate:0.0725,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0.005,fees:1500,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"None on conforming loans",notes:"Fannie Mae 1-unit investment max 85% LTV (2-4 units 75%). Investment LLPAs ~2.125% of loan at 75% LTV vs 4.125% at 85%; usually priced ~0.4-0.8% above owner-occupied rates. Max 10 financed properties."},
+    {name:"Conventional Investment 30yr (15% down + PMI)",category:"Conventional",down:0.15,rate:0.07625,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0.005,fees:1500,ufmi:0,mi:0.0075,miltv:0.78,owner:0,basis:"Purchase",prepay:"None on conforming loans",notes:"15% down is the 1-unit investment floor; requires mortgage insurance above 80% LTV and carries higher LLPAs. PMI rate is an assumed example."},
+    {name:"Conventional Investment 15yr (25% down)",category:"Conventional",down:0.25,rate:0.0675,armfix:0,armrate:0,io:0,amort:15,balloon:0,points:0.005,fees:1500,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"None on conforming loans",notes:"15-yr terms typically price below 30-yr; much higher payment, faster equity."},
+    {name:"DSCR 30yr Fixed (25% down)",category:"DSCR / Non-QM",down:0.25,rate:0.075,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0.015,fees:2000,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"Often 3-5 yr step-down (e.g., 5-4-3-2-1); buy-out ~+0.25-0.875% rate. MN restricts some prepay penalties.",notes:"Qualifies on property rent, not personal DTI. Min DSCR commonly 1.00 (some 0.75-0.99 at lower LTV; some lenders want 1.20-1.25). Max LTV ~75-80% purchase, 70-75% cash-out. Rates ~0.4-1.0% above conventional investor; 1-2 pts origination; 6-12 mo PITIA reserves. Many lenders define DSCR = gross rent / PITIA."},
+    {name:"DSCR Interest-Only (10yr IO, then 30yr amort)",category:"DSCR / Non-QM",down:0.25,rate:0.0775,armfix:0,armrate:0,io:10,amort:30,balloon:0,points:0.015,fees:2000,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"Often 3-5 yr step-down; state limits apply",notes:"IO typically needs ~680-700+ FICO, max ~70-75% LTV, DSCR >= 1.00. Lenders qualify on the IO payment (ITIA). 40-yr total term common (10 IO + 30 amort)."},
+    {name:"7/1 ARM Investment (25% down)",category:"ARM",down:0.25,rate:0.06875,armfix:7,armrate:0.0825,io:0,amort:30,balloon:0,points:0.005,fees:1500,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"Usually none (conventional); DSCR ARMs may have one",notes:"Initial rate fixed 7 yrs, then adjusts. The reset rate here is a hypothetical stress assumption, not a forecast."},
+    {name:"FHA 2-4 Unit House Hack (3.5% down)",category:"FHA (owner-occupied)",down:0.035,rate:0.065,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0,fees:1500,ufmi:0.0175,mi:0.0055,miltv:0,owner:1,basis:"Purchase",prepay:"None",notes:"Must occupy one unit within 60 days for >= 1 yr. Upfront MIP 1.75% (financed), annual MIP 0.55% for >95% LTV, for loan life when <10% down. 3-4 units must pass self-sufficiency test (PITI <= 75% of market rent of all units). Uses \"Owner unit rent forgone\" input."},
+    {name:"Seller Financing (10% down, 5yr balloon)",category:"Seller financing",down:0.10,rate:0.07,armfix:0,armrate:0,io:0,amort:30,balloon:5,points:0,fees:500,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"Negotiable",notes:"Typical negotiated ranges ~10-25% down, ~6-10% rate, 20-30 yr amortization, 3-7 yr balloon. Balloon must be refinanced or paid; projections assume refinance on the same terms."},
+    {name:"Cash Purchase (no loan)",category:"Cash",down:1.0,rate:0,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0,fees:0,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"n/a",notes:"No debt: DSCR not applicable; cash-on-cash = cap rate on cash basis."},
+    {name:"BRRRR: Cash/HELOC buy + DSCR cash-out refi (75% ARV)",category:"BRRRR / Refinance",down:0.25,rate:0.0775,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0.015,fees:2000,ufmi:0,mi:0,miltv:0,owner:0,basis:"ARV Refi",prepay:"Often 3-5 yr step-down (DSCR)",notes:"Buy + rehab with cash/HELOC, then cash-out refi at ~70-75% of appraised value. Many programs need ~6 months seasoning to use appraised value (before that, loan limited to cost + documented rehab). Cash-out adds ~0.25-0.375% to rate. Set ARV, HELOC rate, months to refi and refi costs on Inputs."},
+    {name:"Custom A",category:"Custom",down:0.20,rate:0.07,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0.01,fees:1500,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"",notes:""},
+    {name:"Custom B",category:"Custom",down:0.20,rate:0.07,armfix:0,armrate:0,io:0,amort:30,balloon:0,points:0.01,fees:1500,ufmi:0,mi:0,miltv:0,owner:0,basis:"Purchase",prepay:"",notes:""}
+  ];
+
+  const EMPTY_UNIT = {beds:"",baths:"",current:"",market:""};
+  function defaultUnits() {
+    const u = [{beds:3,baths:2,current:2350,market:2450}];
+    for (let i = 1; i < 20; i++) u.push({...EMPTY_UNIT});
+    return u;
+  }
+
+  const DEFAULT_INPUTS = {
+    propName:"Sample SFR - Rochester, MN",
+    price:285000, closingCosts:6000, rehab:10000, arv:310000, units:1,
+    rentSource:"Unit table (current rents)", rentManual:2350,
+    otherInc:50, vacancy:0.06, forgoneRent:1100,
+    propTax:3400, insurance:1700, hoa:0, maintPct:0.06, capexPct:0.06, mgmtPct:0.08,
+    utilities:0, lawnSnow:40, otherExp:25,
+    appreciation:0.03, rentGrowth:0.03, expGrowth:0.03, sellCost:0.06, holdYears:10,
+    minDscrNoi:1.2, minDscrLender:1.0,
+    secAmt:0, secRate:0.085, secTerm:15, secClose:0,
+    improvedPct:0.8, taxRate:0.24,
+    brrrrMonths:6, helocRate:0.085, refiCosts:4000,
+    loanChoice:"Conventional Investment 30yr (25% down)",
+    overrides:{},
+    unitsRoll: defaultUnits(),
+    compareLoans: [
+      "Conventional Investment 30yr (25% down)",
+      "Conventional Investment 30yr (15% down + PMI)",
+      "DSCR 30yr Fixed (25% down)",
+      "DSCR Interest-Only (10yr IO, then 30yr amort)",
+      "7/1 ARM Investment (25% down)",
+      "FHA 2-4 Unit House Hack (3.5% down)",
+      "Seller Financing (10% down, 5yr balloon)",
+      "Cash Purchase (no loan)",
+      "BRRRR: Cash/HELOC buy + DSCR cash-out refi (75% ARV)"
+    ]
+  };
+
+  function pmt(r, n, pv) {
+    if (n <= 0) return 0;
+    if (r === 0) return pv / n;
+    return pv * r / (1 - Math.pow(1 + r, -n));
+  }
+
+  function npv(rate, cfs) {
+    let s = 0;
+    for (let i = 0; i < cfs.length; i++) {
+      const base = 1 + rate;
+      if (base <= 0) return Infinity;
+      const d = Math.pow(base, i);
+      if (!isFinite(d)) return cfs[i] > 0 ? Infinity : -Infinity;
+      s += cfs[i] / d;
+    }
+    return s;
+  }
+
+  function irr(cfs, lo, hi, steps) {
+    if (lo == null) lo = -0.99;
+    if (hi == null) hi = 10;
+    if (steps == null) steps = 200;
+    const flo = npv(lo, cfs), fhi = npv(hi, cfs);
+    if (flo * fhi <= 0) {
+      for (let i = 0; i < steps; i++) {
+        const m = (lo + hi) / 2;
+        if (npv(lo, cfs) * npv(m, cfs) <= 0) hi = m;
+        else lo = m;
+      }
+      return (lo + hi) / 2;
+    }
+    let r = 0.1;
+    for (let i = 0; i < 80; i++) {
+      let fv = 0, df = 0;
+      for (let t = 0; t < cfs.length; t++) {
+        const d = Math.pow(1 + r, t);
+        if (!isFinite(d)) return "n/a";
+        fv += cfs[t] / d;
+        if (t) df -= t * cfs[t] / (d * (1 + r));
+      }
+      if (Math.abs(df) < 1e-18) break;
+      const r2 = r - fv / df;
+      if (r2 <= -0.999 || r2 > 20 || !isFinite(r2)) return "n/a";
+      if (Math.abs(r2 - r) < 1e-15) return r2;
+      r = r2;
+    }
+    const check = npv(r, cfs);
+    return Math.abs(check) < 1e-4 ? r : "n/a";
+  }
+
+  function cumipmt(r, nper, pv, start, end) {
+    if (r === 0 || pv === 0) return 0;
+    const p = pmt(r, nper, pv);
+    const balBefore = k => pv * Math.pow(1 + r, k - 1) - p * (Math.pow(1 + r, k - 1) - 1) / r;
+    let s = 0;
+    for (let k = start; k <= end; k++) s += balBefore(k) * r;
+    return s;
+  }
+
+  function cumprinc(r, nper, pv, start, end) {
+    if (pv === 0) return 0;
+    if (r === 0) return pv / nper * (end - start + 1);
+    const p = pmt(r, nper, pv);
+    const balBefore = k => pv * Math.pow(1 + r, k - 1) - p * (Math.pow(1 + r, k - 1) - 1) / r;
+    let s = 0;
+    for (let k = start; k <= end; k++) s += p - balBefore(k) * r;
+    return s;
+  }
+
+  function num(v, d) {
+    if (v === "" || v == null) return d == null ? 0 : d;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : (d == null ? 0 : d);
+  }
+
+  function moneyRoundFlag(end) {
+    return "BALLOON DUE: $" + Math.round(end).toLocaleString("en-US");
+  }
+
+  function compute(inp, opts) {
+    opts = opts || {};
+    const programs = opts.programs || PROGRAMS;
+    const useOverrides = opts.useOverrides !== false;
+    const byName = {};
+    for (const p of programs) byName[p.name] = p;
+    const name = inp.loanChoice || DEFAULT_INPUTS.loanChoice;
+    const prog = Object.assign({}, byName[name] || programs[0]);
+    const ovr = useOverrides ? (inp.overrides || {}) : {};
+    function term(k) {
+      const v = ovr[k];
+      if (v === undefined || v === null || v === "") return prog[k];
+      if (k === "basis") return v;
+      return Number(v);
+    }
+    const down = term("down"), rate = term("rate");
+    const armfix = num(term("armfix")), armrate = num(term("armrate"));
+    const io = num(term("io")), amort = num(term("amort")), balloon = num(term("balloon"));
+    const points = num(term("points")), fees = num(term("fees")), ufmi = num(term("ufmi"));
+    const mi = num(term("mi")), miltv = num(term("miltv"));
+    const owner = num(term("owner")) === 1 ? 1 : 0;
+    const basis = term("basis");
+
+    const price = num(inp.price), cc = num(inp.closingCosts), rehab = num(inp.rehab);
+    const arv = num(inp.arv);
+    const valueBasis = arv !== 0 ? arv : price;
+
+    const units = inp.unitsRoll || [];
+    let curTot = 0, mktTot = 0;
+    for (const u of units) {
+      const c = num(u.current), m = num(u.market);
+      if (c) curTot += c;
+      if (m) mktTot += m;
+    }
+    const rentManual = num(inp.rentManual);
+    const src = inp.rentSource || "Unit table (current rents)";
+    let rent;
+    if (src === "Manual total") rent = rentManual;
+    else if (src === "Unit table (market rents)") rent = mktTot > 0 ? mktTot : rentManual;
+    else rent = curTot > 0 ? curTot : rentManual;
+    const proFormaRent = mktTot > 0 ? mktTot : rent;
+
+    const otherInc = num(inp.otherInc), vacancy = num(inp.vacancy), forgone = num(inp.forgoneRent);
+    const propTax = num(inp.propTax), insurance = num(inp.insurance), hoa = num(inp.hoa);
+    const maint = num(inp.maintPct), capex = num(inp.capexPct), mgmt = num(inp.mgmtPct);
+    const utilities = num(inp.utilities), lawn = num(inp.lawnSnow), otherExp = num(inp.otherExp);
+    const appr = num(inp.appreciation), rentG = num(inp.rentGrowth), expG = num(inp.expGrowth);
+    const sellCost = num(inp.sellCost);
+    const hold = Math.max(1, Math.min(30, Math.round(num(inp.holdYears, 10))));
+    const minDscrNoi = num(inp.minDscrNoi), minDscrL = num(inp.minDscrLender);
+    const secAmt = num(inp.secAmt), secRate = num(inp.secRate), secTerm = num(inp.secTerm), secClose = num(inp.secClose);
+    const improved = num(inp.improvedPct), taxRate = num(inp.taxRate);
+    const brrrrM = num(inp.brrrrMonths), helocR = num(inp.helocRate), refiCosts = num(inp.refiCosts);
+
+    const deprBasis = (price + cc + rehab) * improved;
+    const annualDepr = deprBasis / 27.5;
+
+    let loanbase, ltv, downd;
+    if (basis === "ARV Refi") {
+      loanbase = valueBasis * (1 - down);
+      ltv = valueBasis ? loanbase / valueBasis : 0;
+      downd = 0;
+    } else {
+      loanbase = price * (1 - down);
+      ltv = price ? loanbase / price : 0;
+      downd = price - loanbase;
+    }
+    const ufmid = loanbase * ufmi;
+    const loan = loanbase + ufmid;
+    const pointsd = loan * points;
+    const heloc = basis === "ARV Refi" ? (price + cc + rehab) * helocR * brrrrM / 12 : 0;
+    let cashclose, refinet;
+    if (basis === "ARV Refi") {
+      cashclose = price + cc + rehab + heloc - (secAmt - secClose);
+      refinet = loanbase - pointsd - fees - refiCosts;
+    } else {
+      cashclose = downd + cc + rehab + pointsd + fees - (secAmt - secClose);
+      refinet = 0;
+    }
+    const cashin = cashclose - refinet;
+
+    let pi = 0;
+    if (loan === 0) pi = 0;
+    else if (io > 0) pi = loan * rate / 12;
+    else pi = pmt(rate / 12, amort * 12, loan);
+
+    let balreset = null, pi2, pi2when;
+    if (armfix > 0) {
+      if (armfix <= io) balreset = loan;
+      else {
+        const pmt0 = pmt(rate / 12, amort * 12, loan);
+        const k = (armfix - io) * 12, r = rate / 12;
+        balreset = r ? loan * Math.pow(1 + r, k) - pmt0 * (Math.pow(1 + r, k) - 1) / r : loan - pmt0 * k;
+      }
+      pi2 = loan ? pmt(armrate / 12, (io + amort - armfix) * 12, balreset) : 0;
+      pi2when = armfix + 1;
+    } else if (io > 0 && loan) {
+      pi2 = pmt(rate / 12, amort * 12, loan);
+      pi2when = io + 1;
+    } else {
+      pi2 = pi;
+      pi2when = "none";
+    }
+
+    let balloond = 0;
+    if (balloon > 0 && loan > 0) {
+      if (balloon <= io) balloond = loan;
+      else {
+        const pmt0 = pmt(rate / 12, amort * 12, loan);
+        const k = (balloon - io) * 12, r = rate / 12;
+        balloond = r ? loan * Math.pow(1 + r, k) - pmt0 * (Math.pow(1 + r, k) - 1) / r : loan - pmt0 * k;
+      }
+    }
+
+    const mim = (mi > 0 && (miltv === 0 || ltv > miltv)) ? loan * mi / 12 : 0;
+    const pi2nd = secAmt > 0 ? pmt(secRate / 12, secTerm * 12, secAmt) : 0;
+    const taxm = propTax / 12, insm = insurance / 12;
+    const pitia = pi + mim + pi2nd + taxm + insm + hoa;
+
+    const grent = rent - (owner === 1 ? forgone : 0);
+    const gpi = grent + otherInc;
+    const vac = -gpi * vacancy;
+    const egi = gpi + vac;
+    const opex = taxm + insm + hoa + grent * (maint + capex + mgmt) + utilities + lawn + otherExp;
+    const noim = egi - opex;
+    const dsm = pi + mim + pi2nd;
+    const cfm = noim - dsm;
+    const noia = noim * 12, dsa = dsm * 12, cfa = cfm * 12;
+    const cap = price ? noia / price : 0;
+    const capall = (price + cc + rehab) ? noia / (price + cc + rehab) : 0;
+    const coc = cashin <= 0 ? "Infinite (no cash left in deal)" : cfa / cashin;
+    const dscrn = dsa === 0 ? "n/a (no debt)" : noia / dsa;
+    const dscrnp = typeof dscrn !== "number" ? "n/a" : (dscrn >= minDscrNoi ? "PASS" : "FAIL");
+    const dscrl = loan === 0 ? "n/a (no debt)" : (pitia ? grent / pitia : null);
+    const dscrlp = typeof dscrl !== "number" ? "n/a" : (dscrl >= minDscrL ? "PASS" : "FAIL");
+    const beo = gpi ? (opex + dsm) / gpi : 0;
+    const grm = rent ? price / (rent * 12) : 0;
+    const onepct = (price + rehab) ? rent / (price + rehab) : 0;
+    const onepctp = onepct >= 0.01 ? "PASS" : "FAIL";
+    const expr = egi ? opex / egi : 0;
+    const ltc = (price + rehab) ? loanbase / (price + rehab) : 0;
+
+    const totalTerm = Math.round((io + amort) * 12);
+    const miValue = basis === "ARV Refi" ? valueBasis : price;
+    const months = [];
+    let bal = loan;
+    for (let m = 1; m <= 480; m++) {
+      const year = Math.ceil(m / 12);
+      const rateM = (armfix > 0 && m > armfix * 12) ? armrate : rate;
+      if (m > totalTerm || bal <= 0.005) {
+        months.push({month:m,year,rate:rateM,begin:m>totalTerm?0:bal,pi:0,interest:0,principal:0,end:m>totalTerm?0:Math.max(0,bal),mi:0,ds:0,balloon:""});
+        continue;
+      }
+      const begin = bal;
+      const interest = begin * rateM / 12;
+      const pay = (m <= io * 12) ? begin * rateM / 12 : pmt(rateM / 12, totalTerm - m + 1, begin);
+      const principal = pay - interest;
+      const end = Math.max(0, begin - principal);
+      const mimM = (m <= totalTerm && mi > 0 && begin > 0.005 && (miltv === 0 || begin / miValue > miltv)) ? begin * mi / 12 : 0;
+      const flag = (balloon > 0 && m === balloon * 12) ? moneyRoundFlag(end) : "";
+      months.push({month:m,year,rate:rateM,begin,pi:pay,interest,principal,end,mi:mimM,ds:pay+mimM,balloon:flag});
+      bal = end;
+    }
+    const monthAt = m => (m >= 1 && m <= months.length) ? months[m - 1] : {pi:0,interest:0,principal:0,end:0,mi:0,ds:0,balloon:"",begin:0,rate:0};
+    const yearSum = (key, y) => {
+      let s = 0;
+      for (const mo of months) if (mo.year === y) s += mo[key];
+      return s;
+    };
+
+    let bal5;
+    if (loan === 0) bal5 = 0;
+    else if (60 <= io * 12) bal5 = loan;
+    else if (armfix > 0 && armfix < 5) bal5 = "see Amortization";
+    else {
+      const pmt0 = pmt(rate / 12, amort * 12, loan);
+      const k = 60 - io * 12, r = rate / 12;
+      bal5 = r ? loan * Math.pow(1 + r, k) - pmt0 * (Math.pow(1 + r, k) - 1) / r : loan - pmt0 * k;
+    }
+    const eq5 = typeof bal5 !== "number" ? "" : valueBasis * Math.pow(1 + appr, 5) - bal5;
+
+    // second mortgage month-by-month (yearly amort display)
+    const secMonths = [];
+    let b2 = secAmt;
+    const p2 = secAmt ? pmt(secRate / 12, secTerm * 12, secAmt) : 0;
+    const n2 = Math.round(secTerm * 12);
+    for (let m = 1; m <= 480; m++) {
+      if (!secAmt || m > n2 || b2 <= 0.005) {
+        secMonths.push({pay:0,interest:0,principal:0,end:(!secAmt || m > n2) ? 0 : Math.max(0,b2)});
+        continue;
+      }
+      const i2 = b2 * secRate / 12;
+      let pr2 = p2 - i2;
+      if (pr2 > b2) pr2 = b2;
+      const end2 = Math.max(0, b2 - pr2);
+      secMonths.push({pay:p2,interest:i2,principal:pr2,end:end2});
+      b2 = end2;
+    }
+
+    const proj = [];
+    let cumCf = 0, prevValue = valueBasis;
+    for (let y = 1; y <= 30; y++) {
+      const gpiY = (grent * Math.pow(1 + rentG, y - 1) + otherInc * Math.pow(1 + rentG, y - 1)) * 12;
+      const vacY = -gpiY * vacancy;
+      const egiY = gpiY + vacY;
+      const opexY = (propTax / 12 + insurance / 12 + hoa + utilities + lawn + otherExp) * 12 * Math.pow(1 + expG, y - 1)
+        + grent * 12 * Math.pow(1 + rentG, y - 1) * (maint + capex + mgmt);
+      const noiY = egiY - opexY;
+      const piY = yearSum("pi", y);
+      const miY = yearSum("mi", y);
+      const int1Y = yearSum("interest", y);
+      const princ1Y = yearSum("principal", y);
+      const secPayY = (secAmt > 0 && y <= secTerm) ? 12 * pmt(secRate / 12, secTerm * 12, secAmt) : 0;
+      const secIntY = (secAmt === 0 || y > secTerm || secRate === 0) ? 0
+        : cumipmt(secRate / 12, secTerm * 12, secAmt, 12 * y - 11, 12 * y);
+      const secPrincY = secPayY - secIntY;
+      let secBalY;
+      if (secAmt === 0 || y >= secTerm) secBalY = 0;
+      else if (secRate === 0) secBalY = secAmt * (1 - y / secTerm);
+      else secBalY = secAmt - cumprinc(secRate / 12, secTerm * 12, secAmt, 1, 12 * y);
+      const dsY = piY + miY + secPayY;
+      const cfY = noiY - dsY;
+      cumCf += cfY;
+      const valueY = valueBasis * Math.pow(1 + appr, y);
+      const balAll = monthAt(y * 12).end + secBalY;
+      const equity = valueY - balAll;
+      const netSale = valueY * (1 - sellCost) - balAll;
+      const profit = cumCf + netSale - cashin;
+      const cocY = cashin <= 0 ? "n/a" : cfY / cashin;
+      const dscrY = dsY === 0 ? "n/a" : noiY / dsY;
+      const eqMult = cashin <= 0 ? "n/a" : (cumCf + netSale) / cashin;
+      const deprY = y <= 27 ? annualDepr : (y === 28 ? annualDepr / 2 : 0);
+      const totIntY = int1Y + secIntY;
+      const deductions = deprY + totIntY;
+      const taxSav = deductions * taxRate;
+      const apprGain = valueY - prevValue;
+      const paydownY = princ1Y + secPrincY;
+      const totRet = cfY + paydownY + taxSav + apprGain;
+      const totRoi = cashin <= 0 ? "n/a" : totRet / cashin;
+      proj.push({
+        year:y,gpi:gpiY,vacancy:vacY,egi:egiY,opex:opexY,noi:noiY,pi:piY,mi:miY,ds:dsY,cf:cfY,
+        cum_cf:cumCf,interest:int1Y,principal:princ1Y,value:valueY,balance:balAll,equity,
+        net_sale:netSale,profit,coc:cocY,dscr:dscrY,equity_multiple:eqMult,
+        sec_pay:secPayY,sec_int:secIntY,sec_princ:secPrincY,sec_bal:secBalY,depr:deprY,
+        tot_int:totIntY,deductions,tax_savings:taxSav,appr_gain:apprGain,paydown:paydownY,
+        total_return:totRet,total_roi:totRoi
+      });
+      prevValue = valueY;
+    }
+    for (let sale = 1; sale <= 30; sale++) {
+      const vec = [-cashin];
+      for (let t = 1; t <= 30; t++) {
+        if (t < sale) vec.push(proj[t - 1].cf);
+        else if (t === sale) vec.push(proj[t - 1].cf + proj[t - 1].net_sale);
+        else vec.push(0);
+      }
+      proj[sale - 1].irr = cashin <= 0 ? "n/a" : irr(vec);
+    }
+
+    const h = proj[hold - 1];
+    let avgSum = 0;
+    for (let i = 0; i < hold; i++) avgSum += proj[i].cf;
+    const avgCoc = cashin <= 0 ? "n/a" : (avgSum / hold) / cashin;
+
+    const maxYear = Math.max(loan ? Math.ceil(totalTerm / 12) : 0, secAmt ? Math.ceil(secTerm) : 0);
+    const amortYears = [];
+    for (let y = 1; y <= maxYear; y++) {
+      let flag = "";
+      for (const mo of months) if (mo.year === y && mo.balloon) { flag = mo.balloon; break; }
+      let secPay = 0, secInt = 0;
+      for (let m = (y - 1) * 12 + 1; m <= y * 12 && m <= 480; m++) {
+        secPay += secMonths[m - 1].pay;
+        secInt += secMonths[m - 1].interest;
+      }
+      amortYears.push({
+        year:y, pi:yearSum("pi", y), interest:yearSum("interest", y),
+        principal:yearSum("principal", y), mi:yearSum("mi", y),
+        end: loan && y * 12 <= 480 ? monthAt(y * 12).end : 0,
+        balloon:flag, sec_pay:secPay, sec_int:secInt,
+        sec_end: secAmt ? secMonths[Math.min(y * 12, 480) - 1].end : 0
+      });
+    }
+
+    function monthlyAnalysis(gross, rentForRules) {
+      const g = gross - (owner === 1 ? forgone : 0);
+      const oi = otherInc;
+      const vac_ = -(g + oi) * vacancy;
+      const egi_ = g + oi + vac_;
+      const tax_ = propTax / 12, ins_ = insurance / 12;
+      const maint_ = g * maint, capex_ = g * capex, mgmt_ = g * mgmt;
+      const opex_ = tax_ + ins_ + hoa + utilities + lawn + otherExp + maint_ + capex_ + mgmt_;
+      const noi_ = egi_ - opex_;
+      const debtIsZero = (pitia - propTax / 12 - insurance / 12 - hoa) === 0;
+      return {
+        grent:g, other:oi, vacancy:vac_, egi:egi_, tax:tax_, ins:ins_, hoa,
+        utilities, lawn, other_exp:otherExp, maint:maint_, capex:capex_, mgmt:mgmt_,
+        opex:opex_, noi:noi_, dsm, cfm: noi_ - dsm, cfa:(noi_ - dsm) * 12,
+        coc: cashin <= 0 ? "n/a" : ((noi_ - dsm) * 12) / cashin,
+        cap: price ? (noi_ * 12) / price : 0,
+        dscrn: dsm === 0 ? "n/a" : noi_ / dsm,
+        dscrl: debtIsZero ? "n/a" : g / pitia,
+        beo: (g + oi) ? (opex_ + dsm) / (g + oi) : 0,
+        grm: rentForRules ? price / (rentForRules * 12) : 0,
+        onepct: (price + rehab) ? rentForRules / (price + rehab) : 0
+      };
+    }
+
+    const current = monthlyAnalysis(rent, rent);
+    const proforma = monthlyAnalysis(proFormaRent, proFormaRent);
+
+    const rentTable = [];
+    for (let y = 1; y <= 20; y++) {
+      rentTable.push({year:y, monthly: rent * Math.pow(1 + rentG, y - 1), annual: rent * 12 * Math.pow(1 + rentG, y - 1)});
+    }
+    const apprTable = [];
+    for (let y = 1; y <= 10; y++) {
+      const val = valueBasis * Math.pow(1 + appr, y);
+      const prev = y === 1 ? valueBasis : valueBasis * Math.pow(1 + appr, y - 1);
+      const gain = val - prev;
+      apprTable.push({year:y, value:val, gain, gain_pct: prev ? gain / prev : 0});
+    }
+
+    const endMonth = totalTerm > 0 ? monthAt(totalTerm) : {end:0};
+
+    return {
+      terms:{name,down,rate,armfix,armrate,io,amort,balloon,points,fees,ufmi,mi,miltv,owner,basis,
+        prepay:prog.prepay||"",notes:prog.notes||"",category:prog.category||""},
+      rent, proFormaRent, unitCurTotal:curTot, unitMktTotal:mktTot,
+      valueBasis, deprBasis, annualDepr,
+      loanbase, ufmid, loan, ltv, downd, pointsd, heloc, cashclose, refinet, cashin,
+      pi, balreset, pi2, pi2when, balloond, mim, pi2nd, taxm, insm, pitia,
+      grent, oinc:otherInc, gpi, vac, egi, opex, noim, dsm, cfm, noia, dsa, cfa,
+      cap, capall, coc, dscrn, dscrnp, dscrl, dscrlp, beo, grm, onepct, onepctp, expr, ltc, bal5, eq5,
+      months, amortYears, projection:proj,
+      hold:{years:hold,cashin,cum_cf:h.cum_cf,net_sale:h.net_sale,profit:h.profit,irr:h.irr,
+        equity_multiple:h.equity_multiple,avg_coc:avgCoc},
+      current, proforma, rentTable, apprTable,
+      endBalance: loan ? endMonth.end : 0,
+      bal60: loan ? monthAt(60).end : 0,
+      balloonFlag: (balloon > 0 && loan) ? monthAt(balloon * 12).balloon : ""
+    };
+  }
+
+  function compare(inp, names, programs) {
+    const list = names && names.length ? names : (inp.compareLoans || DEFAULT_INPUTS.compareLoans);
+    return list.filter(Boolean).map(n => {
+      const i = Object.assign({}, inp, {loanChoice:n});
+      return compute(i, {programs: programs || inp.programs || PROGRAMS, useOverrides:false});
+    });
+  }
+
+  function cloneDefaults() {
+    const d = JSON.parse(JSON.stringify(DEFAULT_INPUTS));
+    d.unitsRoll = defaultUnits();
+    d.overrides = {};
+    return d;
+  }
+
+  const API = {PROGRAMS, DEFAULT_INPUTS, compute, compare, pmt, irr, cloneDefaults, defaultUnits};
+  if (typeof module !== "undefined" && module.exports) module.exports = API;
+  root.RentalAnalyzer = API;
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const RA = window.RentalAnalyzer;
+  const STORE = "rbi-rental-analyzer-v1";
+  const OVR_KEYS = [
+    ["down","Down payment % (refi: 1 − LTV)","pct",2],
+    ["rate","Interest rate %","pct",3],
+    ["armfix","ARM fixed period (yrs, 0 = fixed)","num",0],
+    ["armrate","ARM rate after reset % (assumed)","pct",3],
+    ["io","Interest-only period (yrs)","num",0],
+    ["amort","Amortization after IO (yrs)","num",0],
+    ["balloon","Balloon due (yr, 0 = none)","num",0],
+    ["points","Points / origination %","pct",3],
+    ["fees","Lender and loan fees ($)","usd",2],
+    ["ufmi","Upfront MI/MIP % (financed)","pct",3],
+    ["mi","Annual MI/MIP % of balance","pct",3],
+    ["miltv","MI drops off at LTV (0 = life of loan)","pct",1],
+    ["owner","Owner-occupied? (1 = yes)","num",0],
+    ["basis","Loan basis (Purchase / ARV Refi)","basis",0]
+  ];
+  const PROG_FIELDS = [
+    ["category","Category","text"],
+    ["down","Down %","pct2"],
+    ["rate","Example rate %","pct3"],
+    ["armfix","ARM yrs","num"],
+    ["armrate","ARM reset %","pct3"],
+    ["io","IO yrs","num"],
+    ["amort","Amort yrs","num"],
+    ["balloon","Balloon yr","num"],
+    ["points","Points %","pct3"],
+    ["fees","Fees $","usd"],
+    ["ufmi","UFMI %","pct3"],
+    ["mi","Annual MI %","pct3"],
+    ["miltv","MI LTV drop","pct1"],
+    ["owner","Owner (0/1)","num"],
+    ["basis","Basis","basis"]
+  ];
+
+  let state = RA.cloneDefaults();
+  state.programs = RA.PROGRAMS.map(p => Object.assign({}, p));
+
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
+
+  function isBlank(v) { return v === "" || v == null; }
+  function fmtUsd(v, d) {
+    if (typeof v !== "number" || !isFinite(v)) return String(v ?? "");
+    const n = d === 0 ? Math.round(v) : v;
+    return n.toLocaleString("en-US", {style:"currency", currency:"USD", minimumFractionDigits:d, maximumFractionDigits:d});
+  }
+  function fmtPct(v, places) {
+    if (v === "n/a" || v === "Infinite (no cash left in deal)" || typeof v === "string") return v;
+    if (typeof v !== "number" || !isFinite(v)) return "—";
+    return (v * 100).toFixed(places == null ? 2 : places) + "%";
+  }
+  function fmtX(v) {
+    if (typeof v !== "number" || !isFinite(v)) return String(v ?? "—");
+    return v.toFixed(2) + "x";
+  }
+  function fmt(v, kind) {
+    if (v == null || v === "") return "—";
+    switch (kind) {
+      case "usd": return fmtUsd(v, 0);
+      case "usd2": return fmtUsd(v, 2);
+      case "pct": return fmtPct(v, 2);
+      case "pct1": return fmtPct(v, 1);
+      case "x": return fmtX(v);
+      case "num": return typeof v === "number" ? (Number.isInteger(v) ? String(v) : v.toFixed(2)) : String(v);
+      case "pass":
+        return v;
+      case "text": return String(v);
+      default: return String(v);
+    }
+  }
+  function nestGet(obj, path) {
+    return path.split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
+  }
+  function clsForPass(v) { return v === "PASS" ? "okpill" : v === "FAIL" ? "failpill" : "na"; }
+
+  function programByName(name) {
+    return state.programs.find(p => p.name === name) || state.programs[0];
+  }
+
+  function buildLoanOptions(sel, current) {
+    sel.innerHTML = "";
+    for (const p of state.programs) {
+      const o = document.createElement("option");
+      o.value = p.name; o.textContent = p.name;
+      if (p.name === current) o.selected = true;
+      sel.appendChild(o);
+    }
+  }
+
+  function buildRentRoll() {
+    const tb = $("#rent-roll tbody");
+    tb.innerHTML = "";
+    for (let i = 0; i < 20; i++) {
+      const u = state.unitsRoll[i] || {beds:"",baths:"",current:"",market:""};
+      const tr = document.createElement("tr");
+      const empty = u.beds==="" && u.baths==="" && u.current==="" && u.market==="";
+      if (i>0 && empty) tr.classList.add("empty-unit");
+      tr.innerHTML = `<td class="left">${i+1}</td>
+        <td><input type="number" data-unit-row="${i}" data-unit-field="beds" min="0" step="0.5" value="${esc(u.beds)}"></td>
+        <td><input type="number" data-unit-row="${i}" data-unit-field="baths" min="0" step="0.5" value="${esc(u.baths)}"></td>
+        <td><input type="number" data-unit-row="${i}" data-unit-field="current" min="0" step="1" value="${esc(u.current)}"></td>
+        <td><input type="number" data-unit-row="${i}" data-unit-field="market" min="0" step="1" value="${esc(u.market)}"></td>`;
+      tb.appendChild(tr);
+    }
+  }
+
+  function esc(v) { return v == null || v === "" ? "" : String(v).replace(/"/g, "&quot;"); }
+
+  function displayValue(name, raw, input) {
+    if (input && input.dataset.unit === "pct") {
+      const places = Number(input.dataset.places || 2);
+      return raw == null || raw === "" ? "" : (Number(raw) * 100).toFixed(places).replace(/\.?0+$/, m => m.includes(".") ? m.replace(/0+$/,"").replace(/\.$/,"") : m);
+    }
+    return raw == null ? "" : String(raw);
+  }
+
+  function parseField(input, raw) {
+    if (raw === "") return input.name === "propName" || input.name === "rentSource" || input.name === "loanChoice" ? "" : (input.dataset.unit === "pct" ? 0 : 0);
+    if (input.name === "propName" || input.name === "rentSource" || input.name === "loanChoice") return raw;
+    const n = Number(raw);
+    if (!isFinite(n)) return 0;
+    if (input.dataset.unit === "pct") return n / 100;
+    return n;
+  }
+
+  function fillInputs() {
+    $$("#inputs [name]").forEach(el => {
+      if (el.name === "loanChoice") return;
+      const v = state[el.name];
+      if (el.dataset.unit === "pct") {
+        const places = Number(el.dataset.places || 2);
+        el.value = v == null || v === "" ? "" : (Number(v) * 100).toFixed(places);
+      } else {
+        el.value = v == null ? "" : v;
+      }
+    });
+    const sel = $("#loan-choice");
+    buildLoanOptions(sel, state.loanChoice);
+    buildOverrides();
+    buildProgramsTable();
+  }
+
+  function buildOverrides() {
+    const tb = $("#overrides tbody");
+    tb.innerHTML = "";
+    const prog = programByName(state.loanChoice);
+    for (const [key, label, kind] of OVR_KEYS) {
+      const tr = document.createElement("tr");
+      const def = prog[key];
+      let defText;
+      if (kind === "pct") defText = fmtPct(Number(def), key === "miltv" ? 1 : 3);
+      else if (kind === "usd") defText = fmtUsd(Number(def), 0);
+      else defText = String(def);
+      const ovr = state.overrides[key];
+      let control;
+      if (kind === "basis") {
+        control = `<select data-ovr="${key}" class="ovr-input"><option value=""></option>
+          <option value="Purchase"${ovr==="Purchase"?" selected":""}>Purchase</option>
+          <option value="ARV Refi"${ovr==="ARV Refi"?" selected":""}>ARV Refi</option></select>`;
+      } else {
+        const places = kind === "pct" ? (key === "miltv" ? 1 : 3) : (kind === "usd" ? 2 : 0);
+        const shown = isBlank(ovr) ? "" : (kind === "pct" ? (Number(ovr)*100).toFixed(places) : ovr);
+        control = `<input type="number" step="any" data-ovr="${key}" class="ovr-input" value="${esc(shown)}">`;
+      }
+      tr.innerHTML = `<td class="left">${label}</td><td>${defText}</td><td class="ovr">${control}</td>`;
+      tb.appendChild(tr);
+    }
+    const note = $("#program-note");
+    const bits = [];
+    if (prog.category) bits.push(`<strong>${prog.category}</strong>`);
+    bits.push("Example defaults only — not a rate quote or offered terms.");
+    if (prog.prepay) bits.push(`Typical prepayment terms (descriptive, not priced): ${prog.prepay}`);
+    if (prog.notes) bits.push(prog.notes);
+    note.innerHTML = bits.join(" ");
+  }
+
+  function buildProgramsTable() {
+    const wrap = $("#programs-wrap");
+    let html = `<table class="sticky-col"><thead><tr><th class="left">Loan type</th>`;
+    for (const [, lab] of PROG_FIELDS) html += `<th>${lab}</th>`;
+    html += `</tr></thead><tbody>`;
+    state.programs.forEach((p, i) => {
+      html += `<tr><td class="left">${p.name}</td>`;
+      for (const [key, , kind] of PROG_FIELDS) {
+        if (kind === "basis") {
+          html += `<td><select data-prog="${i}" data-pkey="${key}"><option value="Purchase"${p.basis==="Purchase"?" selected":""}>Purchase</option><option value="ARV Refi"${p.basis==="ARV Refi"?" selected":""}>ARV Refi</option></select></td>`;
+        } else if (kind === "text") {
+          html += `<td><input type="text" data-prog="${i}" data-pkey="${key}" value="${esc(p[key])}"></td>`;
+        } else if (kind.startsWith("pct")) {
+          const pl = Number(kind.replace("pct","")) || 2;
+          html += `<td><input type="number" step="any" data-prog="${i}" data-pkey="${key}" data-unit="pct" data-places="${pl}" value="${(Number(p[key])*100).toFixed(pl)}"></td>`;
+        } else {
+          html += `<td><input type="number" step="any" data-prog="${i}" data-pkey="${key}" value="${esc(p[key])}"></td>`;
+        }
+      }
+      html += `</tr>`;
+    });
+    html += `</tbody></table>`;
+    wrap.innerHTML = html;
+  }
+
+  function gather() {
+    $$("#inputs [name]").forEach(el => {
+      if (el.closest("#overrides") || el.closest("#programs-wrap") || el.hasAttribute("data-unit-row")) return;
+      state[el.name] = parseField(el, el.value);
+    });
+    state.loanChoice = $("#loan-choice").value;
+    $$("[data-unit-row]").forEach(el => {
+      const i = Number(el.dataset.unitRow);
+      if (!state.unitsRoll[i]) state.unitsRoll[i] = {beds:"",baths:"",current:"",market:""};
+      const raw = el.value;
+      const v = raw === "" ? "" : Number(raw);
+      state.unitsRoll[i][el.dataset.unitField] = v;
+    });
+    $$("#rent-roll tbody tr").forEach((tr,i) => {
+      const u = state.unitsRoll[i] || {};
+      const empty = (u.beds===""||u.beds==null) && (u.baths===""||u.baths==null) && (u.current===""||u.current==null) && (u.market===""||u.market==null);
+      tr.classList.toggle("empty-unit", i>0 && empty);
+    });
+    const ovr = {};
+    $$("[data-ovr]").forEach(el => {
+      if (el.value === "") return;
+      const key = el.dataset.ovr;
+      if (key === "basis") ovr[key] = el.value;
+      else {
+        const meta = OVR_KEYS.find(k => k[0] === key);
+        const n = Number(el.value);
+        if (!isFinite(n)) return;
+        ovr[key] = meta && meta[2] === "pct" ? n / 100 : n;
+      }
+    });
+    state.overrides = ovr;
+    $$("[data-prog]").forEach(el => {
+      const i = Number(el.dataset.prog);
+      const key = el.dataset.pkey;
+      if (!state.programs[i]) return;
+      if (key === "basis" || el.dataset.pkey === "category" || el.type === "text") {
+        state.programs[i][key] = el.value;
+      } else if (el.dataset.unit === "pct") {
+        state.programs[i][key] = Number(el.value) / 100;
+      } else {
+        state.programs[i][key] = Number(el.value);
+      }
+    });
+    const cmp = $$("#tbl-compare thead select").map(s => s.value);
+    if (cmp.length) state.compareLoans = cmp;
+  }
+
+  function row(label, value, kind, opts) {
+    opts = opts || {};
+    const extra = opts.key ? " key" : "";
+    let cell = fmt(value, kind);
+    if (kind === "pass") cell = `<span class="${clsForPass(value)}">${value}</span>`;
+    const trClass = opts.key ? ' class="keyrow-tr"' : '';
+    if (kind !== "pass" && kind !== "text" && typeof value === "number" && value < 0) {
+      return `<tr${trClass}><td class="left">${label}</td><td class="neg${extra}">${cell}</td></tr>`;
+    }
+    return `<tr${trClass}><td class="left">${label}</td><td class="${extra}">${cell}</td></tr>`;
+  }
+
+  function renderOutputs(r) {
+    const beds = state.unitsRoll.reduce((s,u)=>s+Number(u.beds||0),0);
+    const baths = state.unitsRoll.reduce((s,u)=>s+Number(u.baths||0),0);
+    const bag = Object.assign({propName: state.propName, loanName: r.terms.name, bedsTotal: beds, bathsTotal: baths}, r);
+    $$("[data-out]").forEach(el => {
+      const v = nestGet(bag, el.dataset.out);
+      const kind = el.dataset.fmt;
+      if (kind === "pass") {
+        el.className = clsForPass(v);
+        el.textContent = v == null ? "" : v;
+      } else {
+        el.textContent = fmt(v, kind);
+      }
+    });
+    $$("[data-kpi]").forEach(el => {
+      const key = el.dataset.kpi;
+      const v = nestGet(r, key);
+      el.classList.remove("ok","fail","neg");
+      if (v === "PASS") el.classList.add("ok");
+      else if (v === "FAIL") el.classList.add("fail");
+      else if (typeof v === "number" && v < 0) el.classList.add("neg");
+    });
+
+    $("#tbl-sizing").innerHTML =
+      row("Base loan amount", r.loanbase, "usd") +
+      row("Upfront MI/MIP financed", r.ufmid, "usd") +
+      row("Total loan amount", r.loan, "usd") +
+      row("Loan-to-value (base loan / value)", r.ltv, "pct1") +
+      row("Down payment", r.downd, "usd") +
+      row("Points / origination ($)", r.pointsd, "usd") +
+      row("HELOC/bridge carrying cost until refi (BRRRR)", r.heloc, "usd") +
+      row("Cash needed at purchase", r.cashclose, "usd") +
+      row("Net refinance proceeds (BRRRR)", r.refinet, "usd") +
+      row("Total cash invested (cash left in the deal)", r.cashin, "usd", {key:true});
+
+    $("#tbl-pmt").innerHTML =
+      row("Monthly P&I (year 1; interest-only if IO)", r.pi, "usd2") +
+      row("Loan balance at ARM reset", r.balreset == null ? "—" : r.balreset, r.balreset == null ? "text" : "usd") +
+      row("Monthly P&I after IO ends / ARM resets", r.pi2, "usd2") +
+      row("Payment change happens in year", r.pi2when, "num") +
+      row("Balloon payment due (est.)", r.balloond, "usd") +
+      row("Monthly MI / MIP (year 1)", r.mim, "usd2") +
+      row("2nd mortgage P&I (monthly)", r.pi2nd, "usd2") +
+      row("Monthly property tax", r.taxm, "usd2") +
+      row("Monthly insurance", r.insm, "usd2") +
+      row("PITIA (P&I + MI + 2nd + tax + insurance + HOA)", r.pitia, "usd2", {key:true});
+
+    $("#tbl-inc").innerHTML =
+      row("Gross scheduled rent (less owner unit if house hack)", r.grent, "usd") +
+      row("Other income", r.oinc, "usd") +
+      row("Gross potential income", r.gpi, "usd") +
+      row("Vacancy and credit loss", r.vac, "usd") +
+      row("Effective gross income", r.egi, "usd") +
+      row("Operating expenses", r.opex, "usd", {key:true}) +
+      row("NOI (monthly)", r.noim, "usd", {key:true}) +
+      row("Mortgage per month (P&I + MI + 2nd mortgage)", r.dsm, "usd", {key:true}) +
+      row("Cash flow (monthly)", r.cfm, "usd", {key:true});
+
+    $("#tbl-metrics").innerHTML =
+      row("NOI (annual)", r.noia, "usd") +
+      row("Annual debt service", r.dsa, "usd") +
+      row("Cash flow (annual)", r.cfa, "usd") +
+      row("Cap rate (NOI / purchase price)", r.cap, "pct") +
+      row("Cap rate on all-in cost", r.capall, "pct") +
+      row("Cash-on-cash return", r.coc, typeof r.coc === "number" ? "pct" : "text") +
+      row("DSCR — NOI method (NOI / debt service)", r.dscrn, typeof r.dscrn === "number" ? "x" : "text") +
+      row("  vs. NOI minimum", r.dscrnp, "pass") +
+      row("DSCR — lender method (gross rent / PITIA)", r.dscrl, typeof r.dscrl === "number" ? "x" : "text") +
+      row("  vs. lender minimum", r.dscrlp, "pass") +
+      row("Break-even occupancy", r.beo, "pct1") +
+      row("Gross rent multiplier (price / annual gross rent)", r.grm, "x") +
+      row("1% rule (monthly rent / (price + rehab))", r.onepct, "pct") +
+      row("  1% rule check", r.onepctp, "pass") +
+      row("Operating expense ratio (opex / EGI)", r.expr, "pct1") +
+      row("Loan-to-cost (base loan / (price + rehab))", r.ltc, "pct1") +
+      row("1st loan balance after 5 years (est.)", r.bal5, typeof r.bal5 === "number" ? "usd" : "text") +
+      row("Equity after 5 years", r.eq5, r.eq5 === "" ? "text" : "usd") +
+      row("Prepayment penalty (typical, descriptive only)", r.terms.prepay || "—", "text");
+
+    renderProforma(r);
+    renderFiveYear(r);
+    renderGrowth(r);
+    renderCompare(r);
+    renderAmort(r);
+    renderProjection(r);
+    drawCharts(r);
+  }
+
+  function td(v, kind, extra) {
+    extra = extra || "";
+    if (kind === "pass") return `<td class="${extra}"><span class="${clsForPass(v)}">${v}</span></td>`;
+    const neg = (kind !== "text" && typeof v === "number" && v < 0) ? " neg" : "";
+    return `<td class="${extra}${neg}">${fmt(v, kind)}</td>`;
+  }
+
+  function renderProforma(r) {
+    const rows = [
+      ["Gross scheduled rent","grent","usd"],
+      ["Other income","other","usd"],
+      ["Vacancy and credit loss","vacancy","usd"],
+      ["Effective gross income","egi","usd"],
+      ["Property tax","tax","usd2"],
+      ["Insurance","ins","usd2"],
+      ["HOA","hoa","usd2"],
+      ["Utilities (owner-paid)","utilities","usd2"],
+      ["Lawn care / snow removal","lawn","usd2"],
+      ["Other expenses","other_exp","usd2"],
+      ["Maintenance","maint","usd2"],
+      ["CapEx reserve","capex","usd2"],
+      ["Property management","mgmt","usd2"],
+      ["TOTAL OPERATING EXPENSES","opex","usd2","key"],
+      ["Net operating income (NOI)","noi","usd2"],
+      ["MORTGAGE PER MONTH","dsm","usd2","key"],
+      ["Monthly cash flow","cfm","usd2"],
+      ["Annual cash flow","cfa","usd"],
+      ["Cash-on-cash return","coc","pct"],
+      ["Cap rate (NOI / price)","cap","pct"],
+      ["DSCR (NOI / debt service)","dscrn","x"],
+      ["DSCR (rent / PITIA)","dscrl","x"],
+      ["Break-even occupancy","beo","pct1"],
+      ["GRM (price / annual rent)","grm","x"],
+      ["1% rule (rent / (price + rehab))","onepct","pct"]
+    ];
+    let h = `<thead><tr><th class="left">Item</th><th>Current</th><th>Pro forma (market)</th></tr></thead><tbody>`;
+    for (const [lab,k,kind,extra] of rows) {
+      const ck = kind === "pct" && typeof r.current[k] !== "number" ? "text" : kind;
+      const pk = kind === "pct" && typeof r.proforma[k] !== "number" ? "text" : kind;
+      const xk = kind === "x" && typeof r.current[k] !== "number" ? "text" : ck;
+      const xp = kind === "x" && typeof r.proforma[k] !== "number" ? "text" : pk;
+      h += `<tr><td class="left">${lab}</td>${td(r.current[k], xk, extra||"")}${td(r.proforma[k], xp, extra||"")}</tr>`;
+    }
+    h += `</tbody>`;
+    $("#tbl-proforma").innerHTML = h;
+  }
+
+  function fiveHead() {
+    return `<thead><tr><th class="left">Year</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>`;
+  }
+  function fiveRow(label, cells, kind, extra) {
+    let h = `<tr><td class="left">${label}</td>`;
+    for (const v of cells) h += td(v, kind, extra || "");
+    return h + `</tr>`;
+  }
+  function y5(r, key) { return r.projection.slice(0,5).map(p => p[key]); }
+
+  function renderFiveYear(r) {
+    const cashin = r.cashin;
+    const taxRoi = y5(r, "tax_savings").map(v => cashin<=0 ? "n/a" : v/cashin);
+    const payRoi = y5(r, "paydown").map(v => cashin<=0 ? "n/a" : v/cashin);
+    let cum = 0;
+    const cumPay = y5(r, "paydown").map(v => (cum += v));
+    $("#tbl-tax").innerHTML = fiveHead() + `<tbody>` +
+      fiveRow("Depreciation (27.5-yr SL)", y5(r,"depr"), "usd") +
+      fiveRow("Mortgage interest (1st + 2nd)", y5(r,"tot_int"), "usd") +
+      fiveRow("Total deductions", y5(r,"deductions"), "usd") +
+      fiveRow("Est. tax savings", y5(r,"tax_savings"), "usd") +
+      fiveRow("% annual ROI on tax savings", taxRoi, cashin<=0?"text":"pct") +
+      `</tbody>`;
+    $("#tbl-paydown").innerHTML = fiveHead() + `<tbody>` +
+      fiveRow("Principal paid (1st + 2nd)", y5(r,"paydown"), "usd") +
+      fiveRow("Cumulative paydown", cumPay, "usd") +
+      fiveRow("Loan balance EOY (all loans)", y5(r,"balance"), "usd") +
+      fiveRow("% ROI on paydown", payRoi, cashin<=0?"text":"pct") +
+      `</tbody>`;
+    const totRoi = y5(r,"total_roi");
+    let cRet = 0;
+    const cumRet = y5(r,"total_return").map(v => (cRet += v));
+    $("#tbl-roi").innerHTML = fiveHead() + `<tbody>` +
+      fiveRow("Cash flow", y5(r,"cf"), "usd") +
+      fiveRow("Debt paydown", y5(r,"paydown"), "usd") +
+      fiveRow("Tax savings (est.)", y5(r,"tax_savings"), "usd") +
+      fiveRow("Appreciation", y5(r,"appr_gain"), "usd") +
+      fiveRow("TOTAL RETURN $", y5(r,"total_return"), "usd", "key") +
+      fiveRow("TOTAL ROI %", totRoi, cashin<=0?"text":"pct", "okcell") +
+      fiveRow("Cumulative return $", cumRet, "usd") +
+      `</tbody>`;
+  }
+
+  function renderGrowth(r) {
+    let h = `<thead><tr><th>Year</th><th>Monthly rent</th><th>Annual rent</th></tr></thead><tbody>`;
+    for (const row of r.rentTable) h += `<tr><td>${row.year}</td>${td(row.monthly,"usd")}${td(row.annual,"usd")}</tr>`;
+    $("#tbl-rentg").innerHTML = h + `</tbody>`;
+    h = `<thead><tr><th>Year</th><th>Est. value</th><th>Annual gain $</th><th>Annual gain %</th></tr></thead><tbody>`;
+    h += `<tr><td>Today</td>${td(r.valueBasis,"usd")}<td>—</td><td>—</td></tr>`;
+    for (const row of r.apprTable) h += `<tr><td>${row.year}</td>${td(row.value,"usd")}${td(row.gain,"usd")}${td(row.gain_pct,"pct")}</tr>`;
+    $("#tbl-appr").innerHTML = h + `</tbody>`;
+  }
+
+  function renderCompare() {
+    const names = (state.compareLoans && state.compareLoans.length)
+      ? state.compareLoans
+      : RA.DEFAULT_INPUTS.compareLoans;
+    const cols = RA.compare(Object.assign({}, state, {programs: state.programs}), names, state.programs);
+    const metrics = [
+      ["Down payment %","terms.down","pct1"],
+      ["Example interest rate","terms.rate","pct"],
+      ["ARM fixed period (yrs)","terms.armfix","num"],
+      ["Example ARM reset rate","terms.armrate","pct"],
+      ["Interest-only period (yrs)","terms.io","num"],
+      ["Amortization (yrs)","terms.amort","num"],
+      ["Balloon due (yr)","terms.balloon","num"],
+      ["Points / origination %","terms.points","pct"],
+      ["Lender and loan fees","terms.fees","usd"],
+      ["Base loan amount","loanbase","usd"],
+      ["Total loan amount","loan","usd"],
+      ["LTV","ltv","pct1"],
+      ["Down payment $","downd","usd"],
+      ["Cash invested","cashin","usd"],
+      ["Monthly P&I (year 1)","pi","usd2"],
+      ["P&I after IO / ARM reset","pi2","usd2"],
+      ["Monthly MI / MIP","mim","usd2"],
+      ["2nd mortgage P&I","pi2nd","usd2"],
+      ["PITIA","pitia","usd2"],
+      ["NOI (monthly)","noim","usd"],
+      ["Mortgage per month","dsm","usd"],
+      ["Monthly cash flow","cfm","usd"],
+      ["Annual cash flow","cfa","usd"],
+      ["Cap rate","cap","pct"],
+      ["Cash-on-cash","coc","pct"],
+      ["DSCR (NOI method)","dscrn","x"],
+      ["  vs. NOI minimum","dscrnp","pass"],
+      ["DSCR (rent / PITIA)","dscrl","x"],
+      ["  vs. lender minimum","dscrlp","pass"],
+      ["Break-even occupancy","beo","pct1"],
+      ["5-year loan balance","bal5","usd"],
+      ["IRR at hold period","hold.irr","pct"]
+    ];
+    let h = `<thead><tr><th class="left">Loan type</th>`;
+    names.forEach((n,i) => {
+      h += `<th><select data-cmp="${i}" class="compare-head">`;
+      for (const p of state.programs) h += `<option value="${p.name}"${p.name===n?" selected":""}>${p.name}</option>`;
+      h += `</select></th>`;
+    });
+    h += `</tr></thead><tbody>`;
+    for (const [lab, path, kind] of metrics) {
+      h += `<tr><td class="left">${lab}</td>`;
+      for (const c of cols) {
+        const v = nestGet(c, path);
+        const k = (kind === "pct" || kind === "x" || kind === "usd") && typeof v !== "number" ? "text" : kind;
+        h += td(v, k);
+      }
+      h += `</tr>`;
+    }
+    h += `</tbody>`;
+    $("#tbl-compare").innerHTML = h;
+  }
+
+  function renderAmort(r) {
+    let h = `<thead><tr><th>Year</th><th>P&I paid</th><th>Interest</th><th>Principal</th><th>MI / MIP</th><th>1st loan balance EOY</th><th>2nd mtg payments</th><th>2nd mtg balance EOY</th><th class="left">Balloon</th></tr></thead><tbody>`;
+    for (const y of r.amortYears) {
+      h += `<tr><td>${y.year}</td>${td(y.pi,"usd")}${td(y.interest,"usd")}${td(y.principal,"usd")}${td(y.mi,"usd")}${td(y.end,"usd")}${td(y.sec_pay,"usd")}${td(y.sec_end,"usd")}<td class="left">${y.balloon||""}</td></tr>`;
+    }
+    $("#tbl-amort").innerHTML = h + `</tbody>`;
+  }
+
+  function renderProjection(r) {
+    let h = `<thead><tr><th>Year</th><th>EGI</th><th>Opex</th><th>NOI</th><th>Debt service</th><th>Cash flow</th><th>Cum. cash flow</th><th>Value (EOY)</th><th>Loan balance</th><th>Equity</th><th>Net sale proceeds</th><th>Profit if sold</th><th>IRR if sold</th><th>Equity multiple</th><th>Tax savings (est.)</th><th>Total return $</th><th>Total ROI %</th></tr></thead><tbody>`;
+    for (const y of r.projection) {
+      h += `<tr><td>${y.year}</td>${td(y.egi,"usd")}${td(y.opex,"usd")}${td(y.noi,"usd")}${td(y.ds,"usd")}${td(y.cf,"usd")}${td(y.cum_cf,"usd")}${td(y.value,"usd")}${td(y.balance,"usd")}${td(y.equity,"usd")}${td(y.net_sale,"usd")}${td(y.profit,"usd")}${td(y.irr, typeof y.irr==="number"?"pct":"text")}${td(y.equity_multiple, typeof y.equity_multiple==="number"?"x":"text")}${td(y.tax_savings,"usd")}${td(y.total_return,"usd")}${td(y.total_roi, typeof y.total_roi==="number"?"pct":"text")}</tr>`;
+    }
+    $("#tbl-proj").innerHTML = h + `</tbody>`;
+  }
+
+  function drawCharts(r) {
+    const names = state.compareLoans && state.compareLoans.length ? state.compareLoans : RA.DEFAULT_INPUTS.compareLoans;
+    const cols = RA.compare(Object.assign({}, state, {programs: state.programs}), names, state.programs);
+    $("#chart-cf").innerHTML = barChart(cols.map(c => ({
+      label: shortName(c.terms.name),
+      value: c.cfm
+    })));
+    $("#chart-eq").innerHTML = lineChart([
+      {name:"Value", color:"#C2472C", values: r.projection.map(p => p.value)},
+      {name:"Balance", color:"#4A6580", values: r.projection.map(p => p.balance)},
+      {name:"Equity", color:"#1B5C2E", values: r.projection.map(p => p.equity)}
+    ]);
+  }
+
+  function shortName(n) {
+    const map = {
+      "Conventional Investment 30yr (25% down)":"Conv. 25%",
+      "Conventional Investment 30yr (15% down + PMI)":"Conv. PMI",
+      "Conventional Investment 15yr (25% down)":"Conv. 15yr",
+      "DSCR 30yr Fixed (25% down)":"DSCR fixed",
+      "DSCR Interest-Only (10yr IO, then 30yr amort)":"DSCR IO",
+      "7/1 ARM Investment (25% down)":"7/1 ARM",
+      "FHA 2-4 Unit House Hack (3.5% down)":"FHA",
+      "Seller Financing (10% down, 5yr balloon)":"Seller",
+      "Cash Purchase (no loan)":"Cash",
+      "BRRRR: Cash/HELOC buy + DSCR cash-out refi (75% ARV)":"BRRRR",
+      "Custom A":"Custom A",
+      "Custom B":"Custom B"
+    };
+    return map[n] || n.replace("Conventional Investment ","Conv. ").slice(0, 12);
+  }
+
+  function barChart(items) {
+    const W=560,H=280,p={l:52,r:10,t:18,b:56};
+    const iw=W-p.l-p.r, ih=H-p.t-p.b;
+    const vmin = Math.min(0, ...items.map(i => i.value));
+    const vmax = Math.max(0, ...items.map(i => i.value));
+    const span = Math.max(vmax - vmin, 1);
+    const yOf = v => p.t + ih * (1 - (v - vmin) / span);
+    const zero = yOf(0);
+    const bw = iw / items.length;
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly cash flow by loan type">`;
+    s += `<line x1="${p.l}" y1="${zero}" x2="${W-p.r}" y2="${zero}" stroke="#9AA4B0" stroke-width="1"/>`;
+    items.forEach((it,i) => {
+      const x = p.l + bw*i + bw*0.16;
+      const y = yOf(it.value);
+      const top = Math.min(y, zero), h = Math.max(Math.abs(y-zero), 1);
+      const color = it.value >= 0 ? "#1B5C2E" : "#8E2218";
+      s += `<rect x="${x}" y="${top}" width="${bw*0.68}" height="${h}" fill="${color}"/>`;
+      const cx = x + bw*0.34;
+      const parts = String(it.label).split(" ");
+      s += `<text x="${cx}" y="${H-32}" text-anchor="middle" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${escapeXml(parts[0]||"")}</text>`;
+      if (parts[1]) s += `<text x="${cx}" y="${H-18}" text-anchor="middle" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${escapeXml(parts.slice(1).join(" "))}</text>`;
+    });
+    s += `<text x="4" y="${Math.max(12,yOf(vmax)+4)}" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${fmtUsd(vmax,0)}</text>`;
+    s += `<text x="4" y="${Math.min(H-p.b, yOf(vmin)+4)}" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${fmtUsd(vmin,0)}</text>`;
+    s += `</svg>`;
+    return s;
+  }
+
+  function lineChart(series) {
+    const W=520,H=240,p={l:58,r:12,t:12,b:28};
+    const iw=W-p.l-p.r, ih=H-p.t-p.b;
+    const all = series.flatMap(s => s.values);
+    const vmin = Math.min(0, ...all), vmax = Math.max(...all, 1);
+    const span = vmax - vmin || 1;
+    const xOf = i => p.l + iw * (i / (series[0].values.length - 1));
+    const yOf = v => p.t + ih * (1 - (v - vmin) / span);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="30-year value, balance and equity">`;
+    s += `<line x1="${p.l}" y1="${yOf(0)}" x2="${W-p.r}" y2="${yOf(0)}" stroke="#9AA4B0" stroke-width="1"/>`;
+    for (const ser of series) {
+      const pts = ser.values.map((v,i) => `${xOf(i)},${yOf(v)}`).join(" ");
+      s += `<polyline fill="none" stroke="${ser.color}" stroke-width="2" points="${pts}"/>`;
+    }
+    s += `<text x="4" y="${yOf(vmax)+4}" font-size="9" fill="#4A5560" font-family="Arial,sans-serif">${fmtUsd(vmax,0)}</text>`;
+    s += `<text x="${p.l}" y="${H-6}" font-size="9" fill="#4A5560" font-family="Arial,sans-serif">Year 1</text>`;
+    s += `<text x="${W-p.r}" y="${H-6}" text-anchor="end" font-size="9" fill="#4A5560" font-family="Arial,sans-serif">Year 30</text>`;
+    s += `</svg>`;
+    return s;
+  }
+  function escapeXml(t) { return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  function persist() {
+    try {
+      localStorage.setItem(STORE, JSON.stringify({
+        inputs: {
+          propName:state.propName, price:state.price, closingCosts:state.closingCosts, rehab:state.rehab,
+          arv:state.arv, units:state.units, rentSource:state.rentSource, rentManual:state.rentManual,
+          otherInc:state.otherInc, vacancy:state.vacancy, forgoneRent:state.forgoneRent,
+          propTax:state.propTax, insurance:state.insurance, hoa:state.hoa, maintPct:state.maintPct,
+          capexPct:state.capexPct, mgmtPct:state.mgmtPct, utilities:state.utilities, lawnSnow:state.lawnSnow,
+          otherExp:state.otherExp, appreciation:state.appreciation, rentGrowth:state.rentGrowth,
+          expGrowth:state.expGrowth, sellCost:state.sellCost, holdYears:state.holdYears,
+          minDscrNoi:state.minDscrNoi, minDscrLender:state.minDscrLender,
+          secAmt:state.secAmt, secRate:state.secRate, secTerm:state.secTerm, secClose:state.secClose,
+          improvedPct:state.improvedPct, taxRate:state.taxRate,
+          brrrrMonths:state.brrrrMonths, helocRate:state.helocRate, refiCosts:state.refiCosts,
+          loanChoice:state.loanChoice, overrides:state.overrides, unitsRoll:state.unitsRoll,
+          compareLoans:state.compareLoans
+        },
+        programs: state.programs
+      }));
+      const el = $("#save-msg");
+      if (el) el.textContent = "Saved on this device only. Nothing is sent anywhere.";
+    } catch (e) { /* private mode, etc. */ }
+  }
+
+  function restore() {
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (data.inputs) Object.assign(state, data.inputs);
+      if (data.programs && data.programs.length === 12) state.programs = data.programs;
+      if (!state.unitsRoll || state.unitsRoll.length < 20) {
+        const u = state.unitsRoll || [];
+        while (u.length < 20) u.push({beds:"",baths:"",current:"",market:""});
+        state.unitsRoll = u;
+      }
+      return true;
+    } catch (e) { return false; }
+  }
+
+  function recalc() {
+    const r = RA.compute(state, {programs: state.programs, useOverrides: true});
+    renderOutputs(r);
+    return r;
+  }
+
+  function onChange(ev) {
+    if (ev && ev.target && ev.target.id === "loan-choice") {
+      gather();
+      buildOverrides();
+    } else {
+      gather();
+    }
+    recalc();
+    persist();
+  }
+
+  function clearData() {
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    state = RA.cloneDefaults();
+    state.programs = RA.PROGRAMS.map(p => Object.assign({}, p));
+    buildRentRoll();
+    fillInputs();
+    recalc();
+    const el = $("#save-msg");
+    if (el) el.textContent = "Local data cleared. Sample figures restored.";
+  }
+
+  window.__rentalSelfTest = function () {
+    const cases = [];
+    const ver = window.__VERIFY__ || [];
+    return {compute: RA.compute, compare: RA.compare, state, programs: state.programs, result: RA.compute(state, {programs: state.programs})};
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const saved = restore();
+    buildRentRoll();
+    fillInputs();
+    recalc();
+    if (saved) {
+      const el = $("#save-msg");
+      if (el) el.textContent = "Restored numbers saved on this device.";
+    }
+    document.addEventListener("input", ev => {
+      if (ev.target.closest("#inputs") || ev.target.closest("#tbl-compare")) onChange(ev);
+    });
+    document.addEventListener("change", ev => {
+      if (ev.target.closest("#inputs") || ev.target.closest("#tbl-compare")) onChange(ev);
+    });
+    $("#btn-print").addEventListener("click", () => window.print());
+    $("#btn-clear").addEventListener("click", clearData);
+  });
+})();
+
+</script>
+</body>
+</html>
