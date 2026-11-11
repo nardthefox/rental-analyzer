@@ -3,164 +3,159 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rental Property Analyzer | Red Beard Investments</title>
-<meta name="description" content="Estimates only. A private, in-browser rental property calculator. Not a rate quote, loan approval, tax or financial advice.">
+<title>Rental snapshot | Red Beard Investments</title>
+<meta name="description" content="Estimates only. A short, private rental-property snapshot. Not a rate quote, loan approval, tax or financial advice.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect fill=%22%231B2A41%22 width=%2232%22 height=%2232%22 rx=%224%22/%3E%3Ctext x=%2216%22 y=%2222%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2213%22 fill=%22%23F3F5F7%22%3ERB%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect fill=%22%231B2A41%22 width=%2232%22 height=%2232%22 rx=%224%22/%3E%3Crect fill=%22%23C2472C%22 x=%220%22 y=%2224%22 width=%2232%22 height=%228%22/%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#F3F5F7;
   --card:#fff;
-  --inset:#E8EDF2;
-  --kpi:#E6EBEF;
-  --ink:#1A2332;
-  --muted:#4A5560;
   --navy:#1B2A41;
   --rust:#C2472C;
-  --rust-dk:#9A2F1C;
-  --accent:#1B2A41;
+  --rust-d:#9A2F1C;
+  --ink:#1A2332;
+  --muted:#4A5560;
   --slate:#4A6580;
+  --input:#E6EEF5;
+  --inset:#E8EDF2;
+  --kpi:#E6EBEF;
+  --key:#F3E0DB;
   --line:#D4DCE4;
   --line-d:#9AA4B0;
-  --input:#E6EEF5;
-  --input-ink:#1B2A41;
-  --ovr:#EDE6E2;
-  --key:#F3E0DB;
   --ok-bg:#DCEDE0;
   --ok:#1B5C2E;
+  --amber-bg:#F4E6C3;
+  --amber:#6B4E00;
   --fail-bg:#F7D9D6;
   --fail:#8E2218;
-  --shadow:0 6px 18px rgba(20,30,45,.10);
-  --font-body:"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
-  --font-display:Georgia,"Palatino Linotype",Palatino,"Times New Roman",serif;
+  --eyebrow:#F0D0C6;
+  --shadow:0 8px 24px rgba(27,42,65,.08);
+  --font-display:Georgia,Palatino,"Times New Roman",serif;
+  --font-body:"Segoe UI",Helvetica,Arial,sans-serif;
   --radius:12px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--font-body)}
-img,svg{max-width:100%;display:block}
-button,input,select,textarea{font:inherit}
-.skip{position:absolute;left:-999px;top:0;background:#fff;color:var(--ink);padding:8px 12px;z-index:20}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font-body)}
+button,input,select{font:inherit}
+.skip{position:absolute;left:-999px;top:0;background:#fff;padding:8px 12px;z-index:20}
 .skip:focus{left:8px;top:8px}
-.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}
-.top{background:var(--navy);color:#fff;padding:18px 0 0;box-shadow:var(--shadow);border-bottom:3px solid var(--rust)}
-.top .brand{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 24px;padding-bottom:16px}
-.eyebrow{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#F0D0C6}
-.top h1{font-family:var(--font-display);font-size:clamp(26px,5vw,40px);line-height:1.15;margin:4px 0 0;font-weight:700;flex:1 1 240px}
+.wrap{width:min(1080px,calc(100% - 32px));margin-inline:auto}
+.top{background:var(--navy);color:#fff;padding:16px 0 0;box-shadow:var(--shadow)}
+.top .brand{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 20px;padding-bottom:14px}
+.eyebrow{margin:0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--eyebrow)}
+.top h1{font-family:var(--font-display);font-size:clamp(24px,4.4vw,34px);line-height:1.15;margin:4px 0 0;font-weight:700;flex:1 1 220px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
-.disclaimer{margin:0;background:var(--fail-bg);color:var(--fail);padding:10px 0;font-size:13.5px;line-height:1.45;font-style:italic}
-.disclaimer .wrap{padding:0}
-.jump{display:flex;flex-wrap:nowrap;gap:6px;padding:10px 0 8px;position:sticky;top:0;background:var(--bg);z-index:8;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-@media (min-width:900px){.jump{flex-wrap:wrap;overflow:visible}}
-.jump a{color:var(--accent);text-decoration:none;font-size:13px;font-weight:700;padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;min-height:36px;display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto}
-.jump a:hover,.jump a:focus{background:var(--inset);outline:2px solid var(--accent);outline-offset:1px}
-.btn{appearance:none;border:1px solid #fff;background:#fff;color:var(--accent);font:700 15px/1.2 var(--font-body);padding:10px 16px;border-radius:10px;cursor:pointer;min-height:44px}
-.btn:hover,.btn:focus{background:var(--kpi);outline:2px solid #fff;outline-offset:1px}
+.disclaimer{margin:0;background:var(--fail-bg);color:var(--fail);padding:8px 0;font-size:13px;line-height:1.4;font-style:italic}
+.btn{appearance:none;border:1px solid #fff;background:#fff;color:var(--navy);font:700 14px/1.2 var(--font-body);padding:10px 14px;border-radius:10px;cursor:pointer;min-height:44px}
+.btn:hover,.btn:focus{background:var(--eyebrow);outline:2px solid #fff;outline-offset:1px}
 .btn-sec{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
-.btn-sec:hover{background:rgba(255,255,255,.12);color:#fff}
-section.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--rust);border-radius:var(--radius);padding:22px 18px;margin:0 0 18px;box-shadow:var(--shadow);scroll-margin-top:64px}
-h2{font-family:var(--font-display);font-size:clamp(22px,3vw,28px);line-height:1.25;margin:0 0 8px;color:var(--accent)}
-h3{font-family:var(--font-display);font-size:19px;margin:22px 0 10px;color:var(--accent)}
-h3:first-child{margin-top:0}
-.sec-help{margin:0 0 16px;color:var(--muted);font-size:15px}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 8px}
-@media (min-width:800px){.kpis{grid-template-columns:repeat(4,1fr)}}
-.kpi{background:var(--kpi);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.kpi .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
-.kpi .value{font-family:var(--font-display);font-size:clamp(1.15rem,2.4vw,1.55rem);color:var(--accent);margin-top:4px;word-break:break-word}
-.kpi.ok{background:var(--ok-bg)}
-.kpi.ok .value{color:var(--ok)}
-.kpi.fail{background:var(--fail-bg)}
-.kpi.fail .value{color:var(--fail)}
-.kpi.neg{background:var(--fail-bg)}
-.kpi.neg .value{color:var(--fail)}
-.grid{display:grid;gap:12px 18px}
-@media (min-width:800px){
-  .grid-2{grid-template-columns:1fr 1fr}
-  .grid-3{grid-template-columns:1fr 1fr 1fr}
-}
-.field{display:flex;flex-direction:column;gap:4px}
-.field>span,.field>label{font-size:13.5px;color:var(--ink);font-weight:600}
-.hint{font-size:12.5px;color:var(--muted);font-weight:400;display:block}
-input[type="text"],input[type="number"],select,textarea{
-  width:100%;background:var(--input);color:var(--input-ink);border:1px solid var(--line-d);
+.btn-sec:hover{background:rgba(255,255,255,.1);color:#fff}
+.btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--line-d);min-height:40px;padding:8px 12px}
+.btn-ghost:hover,.btn-ghost:focus{background:var(--inset);outline:2px solid var(--navy);outline-offset:1px;color:var(--navy)}
+main{padding:18px 0 8px}
+.lede{margin:0 0 16px;color:var(--muted);max-width:40rem}
+.grid-page{display:grid;gap:16px}
+@media (min-width:900px){.grid-page{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:start}}
+.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--rust);border-radius:var(--radius);padding:18px 16px;box-shadow:var(--shadow)}
+h2{font-family:var(--font-display);font-size:clamp(20px,2.6vw,24px);margin:0 0 6px;color:var(--navy)}
+h3{font-family:var(--font-display);font-size:17px;margin:16px 0 8px;color:var(--navy)}
+.sec-help,.hint{margin:0 0 12px;color:var(--muted);font-size:14px}
+.hint{margin:4px 0 0;font-size:12.5px;font-weight:400}
+.field{display:flex;flex-direction:column;gap:4px;margin:0 0 10px}
+.field>span,.field>label,.field-label{font-size:13.5px;font-weight:650;color:var(--ink)}
+.row{display:grid;gap:10px}
+@media (min-width:560px){.row-2{grid-template-columns:1fr 1fr}.row-3{grid-template-columns:repeat(3,minmax(0,1fr))}.row-4{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:900px){.grid-page .row-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+input[type="text"],input[type="number"],select{
+  width:100%;background:var(--input);color:var(--navy);border:1px solid var(--line-d);
   border-radius:8px;padding:10px 12px;min-height:44px
 }
-input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-.readonly,output,.calc{
-  display:block;background:var(--bg);color:var(--ink);border:1px solid var(--line);
-  border-radius:8px;padding:10px 12px;min-height:44px;font-variant-numeric:tabular-nums
+input:focus,select:focus{outline:2px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{
+  appearance:none;border:1px solid var(--line-d);background:#fff;color:var(--navy);
+  border-radius:999px;padding:8px 12px;min-height:40px;cursor:pointer;font-weight:650;font-size:14px
 }
-.ovr input,.ovr select{background:var(--ovr)}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.pair .sub{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.keyrow{background:var(--key);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-weight:700;color:var(--rust-dk)}
-.okpill,.failpill{display:inline-block;font-weight:700;padding:2px 8px;border-radius:6px;font-size:13px}
-.okpill{background:var(--ok-bg);color:var(--ok)}
-.failpill{background:var(--fail-bg);color:var(--fail)}
-.na{color:var(--muted)}
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 4px;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
-th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:right;white-space:nowrap;vertical-align:middle}
-th:first-child,td:first-child,td.left,th.left{text-align:left;white-space:normal}
-thead th{background:var(--accent);color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em;position:sticky;top:0}
-tbody tr:nth-child(even){background:var(--inset)}
-tbody tr:last-child td{border-bottom:0}
-td.key{background:var(--key);font-weight:700;color:var(--rust-dk)}
-tr.keyrow-tr td{background:var(--key);font-weight:700;color:var(--rust-dk)}
-td.okcell{background:var(--ok-bg);color:var(--ok);font-weight:700}
-td.neg{color:var(--fail)}
-.units input{min-height:38px;padding:6px 8px;width:100%}
-.units td{padding:4px 6px}
-.note{font-size:13.5px;color:var(--muted);margin:12px 0 0}
-.regz{background:var(--inset);border-left:4px solid var(--rust);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;color:var(--ink);margin:0 0 16px}
-.program-note{background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink);margin-top:12px}
-.charts{display:grid;gap:16px}
-@media (min-width:900px){.charts{grid-template-columns:1fr 1fr}}
-.chart{background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:12px}
-.chart h3{margin:0 0 8px;font-size:17px}
-.chart svg{width:100%;height:auto}
-.legend{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:12px;color:var(--muted);margin-top:6px}
-.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
-.sticky-col td:first-child, .sticky-col th:first-child{position:sticky;left:0;background:inherit;z-index:1}
-thead.sticky-col th:first-child, .sticky-col thead th:first-child{background:var(--accent)}
-.compare-head select{min-width:140px;font-size:13px;color:var(--input-ink);min-height:38px;padding:6px}
-footer{padding:24px 0 40px;color:var(--muted);font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.seg button:focus{outline:2px solid var(--navy);outline-offset:1px}
+.seg button:disabled,.seg button[aria-disabled="true"]{opacity:.45;cursor:not-allowed;background:var(--inset);color:var(--muted)}
+.units{display:grid;gap:8px;margin:8px 0}
+.unit-row{display:grid;grid-template-columns:52px 1fr;gap:8px;align-items:center}
+.unit-row label{font-size:13px;color:var(--muted)}
+.unit-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cashline{background:var(--key);color:var(--rust-d);border-radius:8px;padding:10px 12px;font-size:14px;font-weight:650;margin:12px 0 0}
+.regz{background:var(--inset);border-left:4px solid var(--rust);padding:8px 12px;border-radius:0 8px 8px 0;font-size:13px;color:var(--ink);margin:0 0 12px}
+.note-fha,.note-loan{background:var(--inset);border-radius:8px;padding:8px 12px;font-size:13.5px;color:var(--ink);margin:8px 0 10px}
+.deal-flag{background:var(--amber-bg);color:var(--amber);border:1px solid #e2d09a;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;margin:0 0 12px}
+.deal-flag strong{color:var(--amber)}
+.teach-note{font-size:12.5px;color:var(--muted);margin:10px 0 0;line-height:1.45}
+.kpis{display:grid;gap:10px;grid-template-columns:1fr}
+@media (min-width:560px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{background:var(--kpi);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.kpi .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.kpi .value{font-family:var(--font-display);font-size:clamp(1.25rem,2.4vw,1.55rem);color:var(--navy);font-weight:700}
+.kpi .mean,.kpi .bench{font-size:13px;color:var(--ink);margin:0;line-height:1.4}
+.kpi .bench{color:var(--muted)}
+.rating{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:6px;width:fit-content}
+.kpi.ok{background:var(--ok-bg);border-color:#c5ddc9}
+.kpi.ok .value,.kpi.ok .rating{color:var(--ok)}
+.kpi.ok .rating{background:#fff}
+.kpi.amber{background:var(--amber-bg);border-color:#e2d09a}
+.kpi.amber .value,.kpi.amber .rating{color:var(--amber)}
+.kpi.amber .rating{background:#fff}
+.kpi.fail{background:var(--fail-bg);border-color:#e8c4bf}
+.kpi.fail .value,.kpi.fail .rating{color:var(--fail)}
+.kpi.fail .rating{background:#fff}
+.kpi.na{background:var(--inset)}
+.kpi.na .value{color:var(--muted)}
+.rate-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.explainer{margin-top:16px}
+.explainer ol,.explainer ul{margin:8px 0 0;padding:0 0 0 1.15rem}
+.explainer li{margin:0 0 8px;color:var(--ink)}
+.explainer li strong{color:var(--navy)}
+details.more{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:8px 14px;background:var(--card);box-shadow:var(--shadow);border-top:4px solid var(--slate)}
+details.more summary{cursor:pointer;font-weight:700;color:var(--navy);font-family:var(--font-display);font-size:18px;padding:8px 0}
+.snap{display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:8px}
+.snap div{background:var(--inset);border-radius:8px;padding:10px 12px}
+.snap .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.snap .v{font-family:var(--font-display);font-size:1.15rem;color:var(--navy);font-weight:700}
+.saved{font-size:12px;color:var(--muted);margin:8px 0 0}
+footer{padding:20px 0 36px;color:var(--muted);font-size:13.5px}
 footer p{margin:0 0 8px}
-.saved{font-size:12px;color:var(--muted);margin:6px 0 0}
-details.advanced{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--inset)}
-details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padding:6px 0}
+.print-only{display:none}
+.print-recap{display:none}
 @media print{
   :root{print-color-adjust:exact;-webkit-print-color-adjust:exact}
-  @page{size:letter;margin:.55in .5in .6in}
-  body{background:#fff;font-size:11.5px;line-height:1.4}
-  .skip,.jump,.actions,.btn,details.advanced{display:none !important}
-  .top{background:var(--accent);padding:8px 0 0;box-shadow:none}
-  .top h1{font-size:22px;color:#fff}
-  .disclaimer{font-size:10.5px;padding:6px 0;font-style:italic}
+  @page{size:letter;margin:.5in}
+  body{background:#fff;font-size:11px;line-height:1.3}
+  .skip,.actions,.btn,.btn-ghost,.unit-actions,.saved,.lede,#inputs,#explainer{display:none !important}
+  .top{padding:8px 0 0;box-shadow:none}
+  .top h1{font-size:22px}
+  .disclaimer{font-size:10.5px;padding:6px 0}
   .wrap{width:auto;margin:0}
-  section.card{break-inside:auto;box-shadow:none;margin:0 0 14px;padding:12px 12px;border-radius:6px}
-  .chart,.kpis,.table-wrap{break-inside:avoid}
-  #inputs,#results,#five-year,#comparison,#amortization,#projection{break-before:page}
-  h2{font-size:18px}
-  h3{font-size:14px;margin:12px 0 6px}
-  .kpis{grid-template-columns:repeat(4,1fr);gap:6px}
-  .kpi .value{font-size:14px}
-  input,select,textarea,.readonly,output,.calc{min-height:0;padding:4px 6px;border-color:var(--line)}
-  input,select{color:var(--ink);background:var(--input)}
-  .table-wrap{overflow:visible;border:0}
-  table{font-size:10px}
-  th,td{padding:4px 5px}
-  .chart{break-inside:avoid}
-  footer{padding-top:8px}
-  a{color:inherit;text-decoration:none}
+  main{padding:8px 0}
+  .grid-page{display:block}
+  .card,details.more{box-shadow:none;margin:0 0 10px;padding:10px 12px;break-inside:auto}
+  #results{break-inside:avoid}
+  details.more,.snap{break-inside:avoid}
+  details.more{display:block}
+  details.more summary{display:none}
+  .more-body{display:block !important}
+  .more-body .row, .more-body .sec-help{display:none !important}
+  h2{font-size:16px}
+  h3{font-size:13px;margin:8px 0 6px}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px}
+  .kpi{padding:8px 10px}
+  .kpi .value{font-size:16px}
+  .kpi .mean,.kpi .bench{font-size:11px}
+  .teach-note{font-size:10.5px;margin-top:8px}
+  .deal-flag{margin-bottom:8px;font-size:12px}
+  .print-recap{display:block;background:var(--inset);border-radius:8px;padding:10px 12px;margin:0 0 10px;font-size:12px;color:var(--ink)}
   .print-only{display:block}
-  #rent-roll tr.empty-unit{display:none}
-  .jump{display:none !important}
-  section.card{scroll-margin-top:0}
+  footer{padding-top:6px}
 }
-.print-only{display:none}
-.chart svg{overflow:visible}
 
 </style>
 </head>
@@ -170,7 +165,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padd
   <div class="wrap brand">
     <div>
       <p class="eyebrow">Red Beard Investments</p>
-      <h1>Rental Property Analyzer</h1>
+      <h1>Rental snapshot</h1>
     </div>
     <div class="actions">
       <button type="button" class="btn" id="btn-print">Download PDF</button>
@@ -179,276 +174,150 @@ details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padd
   </div>
   <div class="disclaimer"><p class="wrap">Estimates only, not a rate quote, loan approval, tax or financial advice. Confirm terms with a lender and tax advisor.</p></div>
 </header>
-<nav class="jump wrap" aria-label="Page sections">
-  <a href="#dashboard">Dashboard</a>
-  <a href="#inputs">Inputs</a>
-  <a href="#results">Results</a>
-  <a href="#proforma">Current vs pro forma</a>
-  <a href="#five-year">5-year returns</a>
-  <a href="#growth">Growth</a>
-  <a href="#comparison">Loan comparison</a>
-  <a href="#amortization">Amortization</a>
-  <a href="#projection">30-year projection</a>
-</nav>
 <main id="main" class="wrap">
+  <div class="print-only print-recap" id="print-recap"></div>
+  <p class="lede">Enter a few numbers — about two minutes — and see whether the deal holds up on the six measures investors use most. Example figures are already filled in; replace them with a property you’re looking at.</p>
 
-<section id="dashboard" class="card">
-  <h2>Dashboard</h2>
-  <p class="sec-help">Headline figures for <strong data-out="propName" data-fmt="text"></strong> using <strong data-out="loanName" data-fmt="text"></strong>. Figures update as you change the inputs below.</p>
-  <div class="kpis">
-    <div class="kpi" data-kpi="cfm"><div class="label">Monthly cash flow</div><div class="value" data-out="cfm" data-fmt="usd2"></div></div>
-    <div class="kpi" data-kpi="cfa"><div class="label">Annual cash flow</div><div class="value" data-out="cfa" data-fmt="usd"></div></div>
-    <div class="kpi" data-kpi="coc"><div class="label">Cash-on-cash</div><div class="value" data-out="coc" data-fmt="pct"></div></div>
-    <div class="kpi"><div class="label">Cap rate</div><div class="value" data-out="cap" data-fmt="pct"></div></div>
-    <div class="kpi"><div class="label">NOI (annual)</div><div class="value" data-out="noia" data-fmt="usd"></div></div>
-    <div class="kpi"><div class="label">Monthly PITIA</div><div class="value" data-out="pitia" data-fmt="usd2"></div></div>
-    <div class="kpi"><div class="label">Total cash invested</div><div class="value" data-out="cashin" data-fmt="usd"></div></div>
-    <div class="kpi"><div class="label">Break-even occupancy</div><div class="value" data-out="beo" data-fmt="pct1"></div></div>
-    <div class="kpi" data-kpi="dscrnp"><div class="label">DSCR (NOI method)</div><div class="value"><span data-out="dscrn" data-fmt="x"></span> <span data-out="dscrnp" data-fmt="pass"></span></div></div>
-    <div class="kpi" data-kpi="dscrlp"><div class="label">DSCR (rent / PITIA)</div><div class="value"><span data-out="dscrl" data-fmt="x"></span> <span data-out="dscrlp" data-fmt="pass"></span></div></div>
-    <div class="kpi" data-kpi="onepctp"><div class="label">1% rule</div><div class="value"><span data-out="onepct" data-fmt="pct"></span> <span data-out="onepctp" data-fmt="pass"></span></div></div>
-    <div class="kpi"><div class="label">IRR at hold period</div><div class="value" data-out="hold.irr" data-fmt="pct"></div></div>
-  </div>
-  <div class="charts">
-    <div class="chart">
-      <h3>Year-1 monthly cash flow by loan type</h3>
-      <div id="chart-cf"></div>
-      <p class="hint">Uses each program’s example defaults, not your selected-loan overrides. Negative bars fall below the zero line.</p>
-    </div>
-    <div class="chart">
-      <h3>30-year value, loan balance and equity</h3>
-      <div id="chart-eq"></div>
-      <div class="legend">
-        <span><i style="background:#C2472C"></i>Property value</span>
-        <span><i style="background:#4A6580"></i>Loan balance</span>
-        <span><i style="background:#1B5C2E"></i>Equity</span>
+  <div class="grid-page">
+    <section class="card" id="inputs" aria-labelledby="inputs-h">
+      <h2 id="inputs-h">The property</h2>
+      <p class="sec-help">Shaded cells are yours to edit. Default loan terms are <strong>examples, not quotes</strong> and not an offer to lend.</p>
+      <div class="regz">Rates, down payments and fees shown here are example assumptions, not advertised rates or payments. Confirm actual terms with a lender.</div>
+
+      <label class="field">Purchase price
+        <input type="number" name="price" min="0" step="1000">
+      </label>
+
+      <div class="field">
+        <span class="field-label">How many units?</span>
+        <div class="seg" id="unit-seg" role="group" aria-label="Number of units, 1 to 4"></div>
+        <p class="hint">For a house, pick 1. For a duplex, triplex or fourplex, pick 2, 3 or 4. Need a larger building? Add more units below.</p>
       </div>
+      <div class="units" id="unit-rows"></div>
+      <div class="unit-actions">
+        <button type="button" class="btn-ghost" id="btn-add-unit">Add more units</button>
+        <button type="button" class="btn-ghost" id="btn-remove-unit" hidden>Remove last unit</button>
+      </div>
+      <p class="hint" id="rent-total"></p>
+      <p class="note-fha" id="fha-note" hidden>FHA house hack: unit 1 is treated as the home you’d live in, so its rent is not counted as income. This works best on a 2–4 unit property.</p>
+
+      <h3>The loan</h3>
+      <div class="field">
+        <span class="field-label">Loan type</span>
+        <div class="seg" id="loan-seg" role="group" aria-label="Loan type"></div>
+      </div>
+      <div class="row row-3">
+        <label class="field">Down payment %
+          <input type="number" name="down" min="0" max="100" step="0.1" data-unit="pct" data-places="2">
+        </label>
+        <label class="field">Interest rate %
+          <input type="number" name="rate" min="0" step="0.001" data-unit="pct" data-places="3">
+        </label>
+        <label class="field">Amortization (years)
+          <input type="number" name="term" min="1" max="40" step="1">
+        </label>
+      </div>
+      <div class="row row-2">
+        <label class="field">Balloon after (years)
+          <span class="hint">Optional. Leave blank or 0 if there is no balloon. The monthly payment still uses the amortization term above, for example a 25-year amortization with a 5-year balloon.</span>
+          <input type="number" name="balloon" min="0" max="40" step="1" inputmode="numeric">
+        </label>
+      </div>
+      <p class="hint" id="loan-hint"></p>
+      <p class="note-loan" id="fha-block-note" hidden>FHA house hack is for 1–4 unit properties, so it isn’t available for this building. The loan type was switched to Conventional example terms.</p>
+      <p class="note-loan" id="multi-note" hidden>These Conventional and DSCR figures are example terms for 1–4 unit residential loans. They are not representative of commercial multifamily financing.</p>
+
+      <h3>Operating costs</h3>
+      <div class="row row-2">
+        <label class="field">Property tax (annual)
+          <input type="number" name="propTax" min="0" step="1">
+        </label>
+        <label class="field">Insurance (annual)
+          <input type="number" name="insurance" min="0" step="1">
+        </label>
+        <label class="field">Vacancy %
+          <input type="number" name="vacancy" min="0" step="0.1" data-unit="pct" data-places="1">
+        </label>
+        <label class="field">Ongoing maintenance + CapEx reserve % of rent
+          <span class="hint">A monthly reserve, as a percent of rent — not the one-time upfront rehab below.</span>
+          <input type="number" name="maintCapexPct" min="0" step="0.1" data-unit="pct" data-places="1">
+        </label>
+        <label class="field">Property management % of rent
+          <span class="hint">Use 0 if you’ll manage it yourself</span>
+          <input type="number" name="mgmtPct" min="0" step="0.1" data-unit="pct" data-places="1">
+        </label>
+        <label class="field">Other monthly costs
+          <span class="hint">HOA, lawn, utilities you pay, etc.</span>
+          <input type="number" name="otherMonthly" min="0" step="1">
+        </label>
+        <label class="field">Upfront rehab / CapEx (one-time)
+          <span class="hint">Cash spent at or just after closing for repairs or upgrades. This is added to cash invested. It is not the ongoing monthly reserve above. Example default is 0.</span>
+          <input type="number" name="rehab" min="0" step="1">
+        </label>
+      </div>
+      <p class="cashline" id="cash-line"></p>
+      <p class="saved" id="save-msg"></p>
+    </section>
+
+    <div>
+      <section class="card" id="results" aria-labelledby="results-h">
+        <h2 id="results-h">How this deal looks</h2>
+        <p class="sec-help">Each card is a snapshot, not a verdict. Green, amber and red are general rules of thumb — they vary by market, strategy and lender, and they are not advice.</p>
+        <div class="deal-flag" id="balloon-flag" hidden></div>
+        <div class="kpis" id="kpis"></div>
+        <p class="teach-note">The $100 monthly cash-flow cushion, the 0.75% amber floor on the 1% rule, and the 65% expense-ratio amber cap are teaching aids, not published industry standards. Green, amber and red bands are general rules of thumb and are not advice.</p>
+        <p class="rate-note">A deal can look strong on one measure and weak on another. Use the set together, then confirm the numbers with a lender and, for taxes, an advisor.</p>
+      </section>
     </div>
   </div>
-</section>
 
-<section id="inputs" class="card">
-  <h2>Inputs</h2>
-  <p class="sec-help">Shaded input cells are yours to edit. Sample numbers are illustrative only. Optional loan overrides sit next to each program default and apply only to the selected loan — not to the comparison table.</p>
+  <section class="card explainer" id="explainer" aria-labelledby="explainer-h">
+    <h2 id="explainer-h">KPIs of a successful rental</h2>
+    <p class="sec-help">These are the measures most investors check first. None of them is a guarantee. Treat them as a common language for “does this property pay its way?”</p>
+    <ul>
+      <li><strong>Monthly cash flow</strong> is what’s left after operating costs and the mortgage. A rental that pays you is easier to hold than one you have to feed.</li>
+      <li><strong>Cash-on-cash return</strong> is that annual cash flow divided by the cash you actually put in (down payment, closing costs, fees, and any upfront rehab / CapEx). Many investors use something in the 8–12% range as a starting screen for a leveraged rental — your target may be different.</li>
+      <li><strong>Cap rate</strong> is the property’s yield if you paid cash: yearly net operating income ÷ purchase price. It lets you compare two properties without mixing in a loan. Comfortable ranges depend on the market and the risk.</li>
+      <li><strong>DSCR</strong> (debt service coverage) asks whether the rent covers the housing payment. Many DSCR lenders start around 1.00× (rent equals the payment); some want 1.20–1.25× for better terms. A cash purchase has no DSCR.</li>
+      <li><strong>The 1% rule</strong> is a quick first filter: monthly rent around 1% of the price. It ignores taxes, repairs and the loan, and it’s often hard to hit in high-price markets. Use it to sort, not to decide.</li>
+      <li><strong>Expense ratio</strong> is the share of rent that goes to vacancy and operating costs — not the mortgage. A common planning shortcut, often called the “50% rule,” is that about half of the rent may be eaten by those costs over time. Another published shortcut (the “55% rule”) plans for about 45% of rent to go to expenses, leaving 55% as net operating income.</li>
+      <li><strong>Rules of thumb vary.</strong> A tight cash-flow market may reward appreciation more than yield. A lender’s minimum is not the same as your goal. Always check local rents, taxes and actual loan terms.</li>
+    </ul>
+  </section>
 
-  <h3>Property and purchase</h3>
-  <div class="grid grid-2">
-    <label class="field">Property name / address<input type="text" name="propName"></label>
-    <label class="field">Number of units <span class="hint">Informational (FHA house hack is for 2–4 units).</span><input type="number" name="units" min="1" step="1"></label>
-    <label class="field">Purchase price<input type="number" name="price" min="0" step="1"></label>
-    <label class="field">Closing costs (buyer, excluding loan points and fees) <span class="hint">Title, recording, inspection, appraisal, prepaids.</span><input type="number" name="closingCosts" min="0" step="1"></label>
-    <label class="field">Rehab / initial repairs<input type="number" name="rehab" min="0" step="1"></label>
-    <label class="field">After-repair / current value (ARV) <span class="hint">Used for BRRRR refi sizing and as the starting value for appreciation. Leave at 0 to use purchase price.</span><input type="number" name="arv" min="0" step="1"></label>
-  </div>
-
-  <h3>Unit rent roll (up to 20 units)</h3>
-  <p class="hint">Totals drive analysis rent when the rent source is “Unit table.” Leave unused rows blank.</p>
-  <div class="table-wrap">
-    <table class="units" id="rent-roll">
-      <thead><tr><th class="left">Unit</th><th>Beds</th><th>Baths</th><th>Current rent</th><th>Market rent</th></tr></thead>
-      <tbody></tbody>
-      <tfoot>
-        <tr><th class="left">Total</th><td data-out="bedsTotal" data-fmt="num"></td><td data-out="bathsTotal" data-fmt="num"></td><td data-out="unitCurTotal" data-fmt="usd"></td><td data-out="unitMktTotal" data-fmt="usd"></td></tr>
-      </tfoot>
-    </table>
-  </div>
-
-  <h3>Income</h3>
-  <div class="grid grid-2">
-    <label class="field">Rent source for analysis
-      <select name="rentSource">
-        <option>Unit table (current rents)</option>
-        <option>Unit table (market rents)</option>
-        <option>Manual total</option>
-      </select>
-    </label>
-    <label class="field">Total monthly rent — manual entry <span class="hint">Used when the source is Manual, or if the unit table is empty.</span><input type="number" name="rentManual" min="0" step="1"></label>
-    <label class="field">Other monthly income (pet, laundry, storage)<input type="number" name="otherInc" min="0" step="1"></label>
-    <label class="field">Vacancy and credit loss % <span class="hint">Common underwriting range 5–10%.</span><input type="number" name="vacancy" min="0" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Owner-unit rent forgone (house-hack programs only) <span class="hint">Monthly market rent of the unit you would live in. Subtracted only when the selected program is owner-occupied (for example, FHA).</span><input type="number" name="forgoneRent" min="0" step="1"></label>
-  </div>
-  <p class="note">Analysis rent: <strong data-out="rent" data-fmt="usd"></strong> &nbsp;·&nbsp; Pro forma (market) rent: <strong data-out="proFormaRent" data-fmt="usd"></strong></p>
-
-  <h3>Operating expenses</h3>
-  <div class="grid grid-2">
-    <label class="field">Property tax (annual)<input type="number" name="propTax" min="0" step="1"></label>
-    <label class="field">Insurance (annual)<input type="number" name="insurance" min="0" step="1"></label>
-    <label class="field">HOA (monthly)<input type="number" name="hoa" min="0" step="1"></label>
-    <label class="field">Maintenance / repairs (% of gross rent)<input type="number" name="maintPct" min="0" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">CapEx reserve (% of gross rent)<input type="number" name="capexPct" min="0" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Property management (% of gross rent) <span class="hint">Common 8–12%. Set 0% if self-managing.</span><input type="number" name="mgmtPct" min="0" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Owner-paid utilities (monthly)<input type="number" name="utilities" min="0" step="1"></label>
-    <label class="field">Lawn care / snow removal (monthly)<input type="number" name="lawnSnow" min="0" step="1"></label>
-    <label class="field">Other expenses (monthly)<input type="number" name="otherExp" min="0" step="1"></label>
-  </div>
-
-  <h3>Growth and exit</h3>
-  <div class="grid grid-2">
-    <label class="field">Appreciation (annual %)<input type="number" name="appreciation" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Rent growth (annual %)<input type="number" name="rentGrowth" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Expense growth (annual %) <span class="hint">Applies to tax, insurance, HOA, utilities, lawn, other. Percent-of-rent items follow rent.</span><input type="number" name="expGrowth" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Selling costs at exit (% of value)<input type="number" name="sellCost" step="0.1" data-unit="pct" data-places="2"></label>
-    <label class="field">Hold period for summary IRR (years, 1–30)<input type="number" name="holdYears" min="1" max="30" step="1"></label>
-  </div>
-
-  <h3>Underwriting targets</h3>
-  <div class="grid grid-2">
-    <label class="field">Minimum DSCR — NOI method (NOI / annual debt service) <span class="hint">Commercial/portfolio style; many lenders want 1.20–1.25×.</span><input type="number" name="minDscrNoi" min="0" step="0.01"></label>
-    <label class="field">Minimum DSCR — lender gross-rent method (rent / PITIA) <span class="hint">Typical DSCR-loan minimum about 1.00×.</span><input type="number" name="minDscrLender" min="0" step="0.01"></label>
-  </div>
-
-  <h3>Second mortgage (optional)</h3>
-  <p class="hint">Set the amount to 0 if none. A second mortgage reduces cash invested (net of its closing costs) and is included in PITIA, cash flow, DSCR, the projection and loan balance.</p>
-  <div class="grid grid-2">
-    <label class="field">2nd mortgage amount<input type="number" name="secAmt" min="0" step="1"></label>
-    <label class="field">2nd mortgage interest rate %<input type="number" name="secRate" min="0" step="0.001" data-unit="pct" data-places="3"></label>
-    <label class="field">2nd mortgage term (years, fully amortizing)<input type="number" name="secTerm" min="0" step="1"></label>
-    <label class="field">2nd mortgage closing costs<input type="number" name="secClose" min="0" step="1"></label>
-  </div>
-
-  <h3>Tax estimates</h3>
-  <p class="hint">Estimate only — not tax advice. Confirm with a CPA.</p>
-  <div class="grid grid-2">
-    <label class="field">Improved value % (building share of basis) <span class="hint">Land is not depreciable. Use the assessor land/building split as a starting point.</span><input type="number" name="improvedPct" min="0" max="100" step="0.1" data-unit="pct" data-places="1"></label>
-    <label class="field">Marginal income tax rate % <span class="hint">Combined federal + state marginal rate.</span><input type="number" name="taxRate" min="0" max="100" step="0.1" data-unit="pct" data-places="1"></label>
-  </div>
-  <p class="note">Depreciable basis: <strong data-out="deprBasis" data-fmt="usd"></strong> &nbsp;·&nbsp; Annual depreciation (27.5-yr straight line): <strong data-out="annualDepr" data-fmt="usd"></strong></p>
-
-  <h3>BRRRR / refinance settings</h3>
-  <p class="hint">Used only by programs whose loan basis is “ARV Refi.”</p>
-  <div class="grid grid-2">
-    <label class="field">Months from purchase to refinance<input type="number" name="brrrrMonths" min="0" step="1"></label>
-    <label class="field">HELOC / bridge rate on purchase + rehab funds %<input type="number" name="helocRate" min="0" step="0.001" data-unit="pct" data-places="3"></label>
-    <label class="field">Refinance third-party closing costs <span class="hint">Appraisal, title, recording. Lender points and fees come from the program.</span><input type="number" name="refiCosts" min="0" step="1"></label>
-  </div>
-
-  <h3>Loan program</h3>
-  <div class="regz">The rates, points, fees and terms listed for each loan program are <strong>example assumptions</strong> drawn from published ranges as of November 2026. They are not advertised rates, not a rate quote, and not an offer to lend. Estimated payments are calculated from the numbers on this page, not from an advertised payment. Confirm actual terms with a lender.</div>
-  <div class="grid grid-2">
-    <label class="field">Selected loan type
-      <select name="loanChoice" id="loan-choice"></select>
-    </label>
-  </div>
-  <div class="table-wrap" style="margin-top:12px">
-    <table id="overrides">
-      <thead><tr><th class="left">Loan parameter</th><th>Program default (example)</th><th>Your override</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <div class="program-note" id="program-note"></div>
-
-  <details class="advanced">
-    <summary>Edit example program defaults (including Custom A and Custom B)</summary>
-    <p class="hint">These are still examples, not offered rates. Changes here feed the comparison table and the “program default” column. Your overrides above still win for the selected loan.</p>
-    <div class="table-wrap" id="programs-wrap"></div>
+  <details class="more" id="more">
+    <summary>More detail (optional)</summary>
+    <div class="more-body">
+      <p class="sec-help">These extras change cash invested and the five-year snapshot. Leave the examples if you’re just exploring.</p>
+      <div class="row row-3">
+        <label class="field">Closing costs (example)
+          <input type="number" name="closingCosts" min="0" step="1">
+        </label>
+        <label class="field">Other monthly income
+          <span class="hint">Pets, laundry, storage</span>
+          <input type="number" name="otherInc" min="0" step="1">
+        </label>
+        <label class="field">Example appreciation % / year
+          <span class="hint">A planning assumption, not a forecast</span>
+          <input type="number" name="appreciation" step="0.1" data-unit="pct" data-places="1">
+        </label>
+      </div>
+      <h3>Five-year equity snapshot</h3>
+      <p class="hint">Assumes the loan is paid as scheduled and value grows at your example appreciation rate. Principal paydown is included in equity. This is not a projection you should bank on, and it is not tax advice.</p>
+      <div class="snap" id="snap"></div>
+    </div>
   </details>
-  <p class="saved" id="save-msg"></p>
-</section>
-
-<section id="results" class="card">
-  <h2>Results — selected loan</h2>
-  <p class="sec-help">Live results for the loan chosen above. PASS / FAIL marks use the minimum DSCR figures you entered.</p>
-  <h3>Loan sizing</h3>
-  <div class="table-wrap">
-    <table>
-      <tbody id="tbl-sizing"></tbody>
-    </table>
-  </div>
-  <h3>Monthly payment</h3>
-  <div class="table-wrap">
-    <table>
-      <tbody id="tbl-pmt"></tbody>
-    </table>
-  </div>
-  <h3>Monthly income and expenses (year 1)</h3>
-  <div class="table-wrap">
-    <table>
-      <tbody id="tbl-inc"></tbody>
-    </table>
-  </div>
-  <h3>Key metrics</h3>
-  <div class="table-wrap">
-    <table>
-      <tbody id="tbl-metrics"></tbody>
-    </table>
-  </div>
-</section>
-
-<section id="proforma" class="card">
-  <h2>Current vs pro forma</h2>
-  <p class="sec-help">The pro forma column swaps in market rents from the rent roll (or the analysis rent if no market rents are entered). Expenses that are a percent of rent follow that rent. Debt service is the selected loan.</p>
-  <div class="table-wrap">
-    <table id="tbl-proforma" class="sticky-col"></table>
-  </div>
-</section>
-
-<section id="five-year" class="card">
-  <h2>5-year tax estimate, debt paydown and total return</h2>
-  <p class="sec-help">Tax figures are rough estimates (straight-line 27.5-year depreciation on the improved share of price + closing + rehab; interest from the amortization schedule). Actual benefit depends on net rental income, passive-loss limits, depreciation recapture and your tax situation. Not tax advice; consult a CPA.</p>
-  <h3>Tax deduction summary (estimate)</h3>
-  <div class="table-wrap"><table id="tbl-tax"></table></div>
-  <h3>Debt paydown</h3>
-  <div class="table-wrap"><table id="tbl-paydown"></table></div>
-  <h3>Total return on investment, years 1–5</h3>
-  <div class="table-wrap"><table id="tbl-roi"></table></div>
-</section>
-
-<section id="growth" class="card">
-  <h2>Rent growth and appreciation</h2>
-  <div class="grid grid-2">
-    <div>
-      <h3>20-year rent growth</h3>
-      <p class="hint">Gross scheduled rent used in the analysis, grown at your rent-growth assumption.</p>
-      <div class="table-wrap"><table id="tbl-rentg"></table></div>
-    </div>
-    <div>
-      <h3>10-year appreciation</h3>
-      <p class="hint">Starting from the value basis (ARV, or purchase price if ARV is 0).</p>
-      <div class="table-wrap"><table id="tbl-appr"></table></div>
-    </div>
-  </div>
-</section>
-
-<section id="comparison" class="card">
-  <h2>Side-by-side loan comparison</h2>
-  <p class="sec-help">Pick any program in each column. This table uses each program’s example defaults and the same property inputs. Selected-loan overrides are not applied here.</p>
-  <div class="table-wrap"><table id="tbl-compare" class="sticky-col"></table></div>
-</section>
-
-<section id="amortization" class="card">
-  <h2>Yearly amortization summary</h2>
-  <p class="sec-help">Handles fixed rates, interest-only periods, an ARM reset at the assumed reset rate, and mortgage insurance drop-off. A balloon month is flagged; the balance then continues as if refinanced on the same terms.</p>
-  <div class="table-wrap"><table id="tbl-amort"></table></div>
-</section>
-
-<section id="projection" class="card">
-  <h2>30-year projection and IRR</h2>
-  <p class="sec-help">Year 1 is the first year of stabilized operation. Fixed expenses grow at the expense-growth rate; percent-of-rent expenses follow rent. IRR assumes a sale at the end of that year, net of selling costs. Prepayment penalties are not modeled.</p>
-  <div class="kpis">
-    <div class="kpi"><div class="label">Hold period</div><div class="value" data-out="hold.years" data-fmt="num"></div></div>
-    <div class="kpi"><div class="label">Cumulative cash flow</div><div class="value" data-out="hold.cum_cf" data-fmt="usd"></div></div>
-    <div class="kpi"><div class="label">Net sale proceeds</div><div class="value" data-out="hold.net_sale" data-fmt="usd"></div></div>
-    <div class="kpi"><div class="label">Total profit</div><div class="value" data-out="hold.profit" data-fmt="usd"></div></div>
-    <div class="kpi"><div class="label">IRR</div><div class="value" data-out="hold.irr" data-fmt="pct"></div></div>
-    <div class="kpi"><div class="label">Equity multiple</div><div class="value" data-out="hold.equity_multiple" data-fmt="x"></div></div>
-    <div class="kpi"><div class="label">Average annual cash-on-cash</div><div class="value" data-out="hold.avg_coc" data-fmt="pct"></div></div>
-    <div class="kpi"><div class="label">Total cash invested</div><div class="value" data-out="hold.cashin" data-fmt="usd"></div></div>
-  </div>
-  <div class="table-wrap"><table id="tbl-proj" class="sticky-col"></table></div>
-</section>
-
 </main>
 <footer class="wrap">
   <p><strong>Red Beard Investments</strong></p>
-  <p>Estimates only, not a rate quote, loan approval, tax or financial advice. Confirm terms with a lender and tax advisor. Example loan program rates, points and fees are illustrative assumptions, not offered or advertised terms.</p>
+  <p>Estimates only, not a rate quote, loan approval, tax or financial advice. Confirm terms with a lender and tax advisor. Example rates, down payments and fees are illustrative assumptions, not offered or advertised terms.</p>
   <p>This page runs entirely on your device. It does not send your numbers anywhere, and it uses no cookies or analytics. If you choose to save, a copy is stored only in this browser. Use “Clear my data” to remove it.</p>
-  <p class="print-only">Printed from the Rental Property Analyzer. Figures are estimates as of the date of printing.</p>
+  <p class="print-only">Printed from the Rental snapshot calculator. Figures are estimates as of the date of printing. Green / amber / red marks are general rules of thumb, not advice.</p>
 </footer>
-
 
 <script>
 /* Rental Property Analyzer engine.
-   Ports the live formulas from the companion Excel workbook.
+   Ports the live formulas from the tested workbook engine.
    No I/O, no network. Works in the browser and in Node. */
 (function (root) {
   "use strict";
@@ -947,638 +816,395 @@ details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padd
 
 </script>
 <script>
-(function () {
+/* Maps the simplified snapshot form onto the tested workbook engine, and rates KPIs.
+   Works in Node and in the browser. */
+(function (root) {
   "use strict";
-  const RA = window.RentalAnalyzer;
-  const STORE = "rbi-rental-analyzer-v1";
-  const OVR_KEYS = [
-    ["down","Down payment % (refi: 1 − LTV)","pct",2],
-    ["rate","Interest rate %","pct",3],
-    ["armfix","ARM fixed period (yrs, 0 = fixed)","num",0],
-    ["armrate","ARM rate after reset % (assumed)","pct",3],
-    ["io","Interest-only period (yrs)","num",0],
-    ["amort","Amortization after IO (yrs)","num",0],
-    ["balloon","Balloon due (yr, 0 = none)","num",0],
-    ["points","Points / origination %","pct",3],
-    ["fees","Lender and loan fees ($)","usd",2],
-    ["ufmi","Upfront MI/MIP % (financed)","pct",3],
-    ["mi","Annual MI/MIP % of balance","pct",3],
-    ["miltv","MI drops off at LTV (0 = life of loan)","pct",1],
-    ["owner","Owner-occupied? (1 = yes)","num",0],
-    ["basis","Loan basis (Purchase / ARV Refi)","basis",0]
+  const RA = root.RentalAnalyzer;
+  const MAX_UNITS = 50;
+  const LOANS = [
+    {id:"conventional", label:"Conventional", program:"Conventional Investment 30yr (25% down)", down:0.25, rate:0.0725, term:30,
+      hint:"Example terms only: 25% down, 7.25% rate, 30-year term, plus example points and lender fees. If you put down less than 20%, an example PMI rate is included. Not a quote."},
+    {id:"dscr", label:"DSCR", program:"DSCR 30yr Fixed (25% down)", down:0.25, rate:0.075, term:30,
+      hint:"Example terms only: 25% down, 7.50% rate, 30-year term, plus example DSCR points and lender fees. Qualifies on the property’s rent, not your personal income. Not a quote."},
+    {id:"fha", label:"FHA house hack", program:"FHA 2-4 Unit House Hack (3.5% down)", down:0.035, rate:0.065, term:30,
+      hint:"Example terms only: 3.5% down, 6.50% rate, 30-year term, plus example FHA upfront and annual mortgage insurance. You would need to live in unit 1. Not a quote."},
+    {id:"cash", label:"Cash", program:"Cash Purchase (no loan)", down:1, rate:0, term:30,
+      hint:"A cash purchase has no mortgage, so DSCR does not apply. Cash-on-cash and cap rate will match, because all of the price (plus costs) is cash you put in."}
   ];
-  const PROG_FIELDS = [
-    ["category","Category","text"],
-    ["down","Down %","pct2"],
-    ["rate","Example rate %","pct3"],
-    ["armfix","ARM yrs","num"],
-    ["armrate","ARM reset %","pct3"],
-    ["io","IO yrs","num"],
-    ["amort","Amort yrs","num"],
-    ["balloon","Balloon yr","num"],
-    ["points","Points %","pct3"],
-    ["fees","Fees $","usd"],
-    ["ufmi","UFMI %","pct3"],
-    ["mi","Annual MI %","pct3"],
-    ["miltv","MI LTV drop","pct1"],
-    ["owner","Owner (0/1)","num"],
-    ["basis","Basis","basis"]
-  ];
-
-  let state = RA.cloneDefaults();
-  state.programs = RA.PROGRAMS.map(p => Object.assign({}, p));
-
-  function $(sel, root) { return (root || document).querySelector(sel); }
-  function $$(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
-
-  function isBlank(v) { return v === "" || v == null; }
+  function defaultState() {
+    return {
+      price: 285000, unitCount: 1, rents: [2350], loanType: "conventional",
+      down: 0.25, rate: 0.0725, term: 30, balloon: 0,
+      propTax: 3400, insurance: 1700,
+      vacancy: 0.06, maintCapexPct: 0.12, mgmtPct: 0.08, otherMonthly: 65,
+      closingCosts: 6000, rehab: 0, otherInc: 50, appreciation: 0.03
+    };
+  }
+  function loanById(id) { return LOANS.find(l => l.id === id) || LOANS[0]; }
+  function rentTotal(s) {
+    let t = 0;
+    for (let i = 0; i < s.unitCount; i++) t += Number(s.rents[i] || 0);
+    return t;
+  }
+  function toEngineInput(s) {
+    const loan = loanById(s.loanType);
+    const roll = [];
+    for (let i = 0; i < s.unitCount; i++) {
+      const rent = Number(s.rents[i] || 0);
+      roll.push({beds:"", baths:"", current: rent > 0 ? rent : "", market:""});
+    }
+    const overrides = {
+      down: s.loanType === "cash" ? 1 : Number(s.down),
+      rate: s.loanType === "cash" ? 0 : Number(s.rate),
+      amort: Number(s.term) || 30,
+      io: 0, armfix: 0, armrate: 0,
+      balloon: (s.loanType === "cash" ? 0 : (Number(s.balloon) || 0))
+    };
+    if (s.loanType === "conventional" && Number(s.down) < 0.20) {
+      overrides.mi = 0.0075;
+      overrides.miltv = 0.78;
+    }
+    if (s.loanType === "cash") {
+      overrides.points = 0; overrides.fees = 0; overrides.mi = 0; overrides.ufmi = 0; overrides.owner = 0;
+    }
+    const mc = Number(s.maintCapexPct) || 0;
+    return Object.assign(RA.cloneDefaults(), {
+      propName: "Sample property",
+      price: Number(s.price) || 0,
+      closingCosts: Number(s.closingCosts) || 0,
+      rehab: Number(s.rehab) || 0,
+      arv: 0,
+      rentSource: "Unit table (current rents)",
+      rentManual: 0,
+      otherInc: Number(s.otherInc) || 0,
+      vacancy: Number(s.vacancy) || 0,
+      forgoneRent: s.loanType === "fha" ? Number(s.rents[0] || 0) : 0,
+      propTax: Number(s.propTax) || 0,
+      insurance: Number(s.insurance) || 0,
+      hoa: 0,
+      maintPct: mc / 2,
+      capexPct: mc / 2,
+      mgmtPct: Number(s.mgmtPct) || 0,
+      utilities: 0,
+      lawnSnow: 0,
+      otherExp: Number(s.otherMonthly) || 0,
+      appreciation: Number(s.appreciation) || 0,
+      loanChoice: loan.program,
+      overrides: overrides,
+      unitsRoll: roll
+    });
+  }
+  function computeSnapshot(s) {
+    const input = toEngineInput(s);
+    const result = RA.compute(input, {programs: RA.PROGRAMS, useOverrides: true});
+    return {input, result, kpis: kpisFrom(result, s), rentTotal: rentTotal(s)};
+  }
   function fmtUsd(v, d) {
-    if (typeof v !== "number" || !isFinite(v)) return String(v ?? "");
-    const n = d === 0 ? Math.round(v) : v;
-    return n.toLocaleString("en-US", {style:"currency", currency:"USD", minimumFractionDigits:d, maximumFractionDigits:d});
+    if (typeof v !== "number" || !isFinite(v)) return "—";
+    return v.toLocaleString("en-US", {style:"currency", currency:"USD", minimumFractionDigits:d, maximumFractionDigits:d});
   }
   function fmtPct(v, places) {
-    if (v === "n/a" || v === "Infinite (no cash left in deal)" || typeof v === "string") return v;
     if (typeof v !== "number" || !isFinite(v)) return "—";
     return (v * 100).toFixed(places == null ? 2 : places) + "%";
   }
   function fmtX(v) {
-    if (typeof v !== "number" || !isFinite(v)) return String(v ?? "—");
-    return v.toFixed(2) + "x";
+    if (typeof v !== "number" || !isFinite(v)) return "—";
+    return v.toFixed(3) + "x";
   }
-  function fmt(v, kind) {
-    if (v == null || v === "") return "—";
-    switch (kind) {
-      case "usd": return fmtUsd(v, 0);
-      case "usd2": return fmtUsd(v, 2);
-      case "pct": return fmtPct(v, 2);
-      case "pct1": return fmtPct(v, 1);
-      case "x": return fmtX(v);
-      case "num": return typeof v === "number" ? (Number.isInteger(v) ? String(v) : v.toFixed(2)) : String(v);
-      case "pass":
-        return v;
-      case "text": return String(v);
-      default: return String(v);
+  function roundPlaces(v, places) {
+    if (typeof v !== "number" || !isFinite(v)) return v;
+    const f = Math.pow(10, places);
+    return Math.round(v * f) / f;
+  }
+  // Rate the value the reader actually sees, so a card cannot show 1.25× in amber.
+  function bandUsd0(v) {
+    const s = v.toLocaleString("en-US", {style:"currency", currency:"USD", minimumFractionDigits:0, maximumFractionDigits:0});
+    const neg = /[-−(]/.test(s);
+    const n = Number(s.replace(/[^0-9.]/g, ""));
+    return neg ? -n : n;
+  }
+  function bandRatio(v, pctDecimals) { return Number((v * 100).toFixed(pctDecimals)) / 100; }
+  function bandX(v) { return Number(v.toFixed(3)); }
+  function ok(r, m, b) { return {tone:"ok", rating:r, mean:m, bench:b}; }
+  function amber(r, m, b) { return {tone:"amber", rating:r, mean:m, bench:b}; }
+  function fail(r, m, b) { return {tone:"fail", rating:r, mean:m, bench:b}; }
+  function na(r, m, b) { return {tone:"na", rating:r, mean:m || "", bench:b || ""}; }
+  function rateCashFlow(v) {
+    if (typeof v !== "number") return na("Not available");
+    v = bandUsd0(v);
+    if (v > 100) return ok("Solid", "After the costs you entered, this property would pay you each month.", "What good looks like: cash flow is positive, with some room for a vacancy or a repair.");
+    if (v >= 0) return amber("Thin", "It pencils positive, but the cushion is thin — one empty month or a repair could wipe it out.", "What good looks like: cash flow is clearly positive, not just barely above zero.");
+    if (v >= -100) return amber("Near break-even", "You’d be close to breaking even, and likely writing a small check some months.", "What good looks like: the property pays you after the mortgage and operating costs.");
+    return fail("Short", "On these numbers, you’d be writing a check each month to keep the property going.", "What good looks like: monthly cash flow is positive after costs and the loan.");
+  }
+  function rateCoc(v) {
+    if (v === "Infinite (no cash left in deal)") return amber("Unusual", "You’d have little or no cash left in the deal, so the percentage return is not meaningful in the usual way.", "What good looks like: many investors screen leveraged rentals around 8–12% cash-on-cash, depending on the market and the risk.");
+    if (typeof v !== "number") return na("Not available");
+    v = bandRatio(v, 2);
+    if (v >= 0.08) return ok("On screen", "Your annual cash flow is at least 8% of the cash you put in, a common starting screen for a leveraged rental.", "What good looks like: many investors aim for about 8–12% cash-on-cash. Your target may be higher or lower.");
+    if (v >= 0.05) return amber("Modest", "The cash return on the money you put in is modest — below the 8–12% range many investors use as a first screen.", "What good looks like: about 8–12% is a common starting screen; under 5% is often a warning to look harder at price or financing.");
+    return fail("Low", "The cash return is under 5% (or negative). That can still be a strategy in some markets, but it is a weak screen on this measure.", "What good looks like: about 8–12% is a common starting screen for a leveraged rental.");
+  }
+  function rateCap(v) {
+    if (typeof v !== "number") return na("Not available");
+    v = bandRatio(v, 2);
+    if (v >= 0.06) return ok("On screen", "If you paid cash, the property’s yearly net income would be at least 6% of the price — a comfortable screen in many markets.", "What good looks like: about 6–8% is often cited as a solid general screen; higher-priced markets often run lower.");
+    if (v >= 0.04) return amber("In range for some markets", "A 4–6% cap rate is common in higher-priced or lower-risk areas. Compare it to similar properties nearby, not to a national average.", "What good looks like: many investors treat about 6% and up as a comfortable general screen; 4–6% can still be normal where prices are high.");
+    return fail("Low yield", "The cap rate is under 4%. The property may depend on appreciation, very cheap financing, or a value-add plan to work.", "What good looks like: about 6–8% is often cited as a solid general screen; it varies widely by market.");
+  }
+  function rateDscr(v) {
+    if (typeof v !== "number") return na("No loan", "There is no mortgage, so DSCR does not apply.", "What good looks like: on a loan, many DSCR lenders start around 1.00× and some want 1.20–1.25×. Purchase programs are often 1.20× or higher.");
+    v = bandX(v);
+    if (v >= 1.25) return ok("Comfortable", "Gross rent covers the full housing payment (PITIA) by 1.25× or more — a common bar for stronger DSCR terms.", "What good looks like: 1.00× is a common minimum; 1.20–1.25× is a common bar for better terms.");
+    if (v >= 1.00) return amber("Meets a common minimum", "Rent covers the payment, but just at or above 1.00×. Some lenders will consider this; others want 1.20–1.25×.", "What good looks like: 1.00× is a common minimum; 1.20–1.25× is often preferred.");
+    return fail("Short of 1.00×", "Gross rent does not fully cover the housing payment. Some programs allow a ratio under 1.00× at a lower loan-to-value, but it is a tighter deal.", "What good looks like: 1.00× is a common minimum; 1.20–1.25× is often preferred.");
+  }
+  function rateOnePct(v) {
+    if (typeof v !== "number") return na("Not available");
+    v = bandRatio(v, 2);
+    if (v >= 0.01) return ok("Hits the screen", "Monthly rent is at least 1% of the purchase price, the classic quick filter.", "What good looks like: monthly rent around 1% of price. This ignores taxes, repairs and the loan — use it to sort, not to decide.");
+    if (v >= 0.0075) return amber("Close, short of 1%", "Rent is under the 1% screen but not far from it. That’s common in higher-priced markets and still worth a full look at cash flow.", "What good looks like: 1% of price is the usual first filter. Many good deals in expensive markets miss it.");
+    return fail("Below the screen", "Rent is well under 1% of the price. The deal would need unusually low costs, cheap financing, or another reason to work.", "What good looks like: monthly rent around 1% of price, as a first filter only.");
+  }
+  function rateExpense(v) {
+    if (typeof v !== "number") return na("Not available");
+    v = bandRatio(v, 1);
+    if (v <= 0.50) return ok("At or under 50%", "Vacancy and operating costs take half or less of potential rent, in line with the common “50% rule” planning shortcut.", "What good looks like: a common shortcut is that about half of the rent goes to vacancy and operating costs (not the mortgage) over time.");
+    if (v <= 0.65) return amber("Above the 50% shortcut", "Operating costs are eating more than half of potential rent. The deal can still work, but cash flow will be tighter.", "What good looks like: many investors plan around 50% of rent for vacancy and operating costs, before the mortgage.");
+    return fail("High costs", "Vacancy and operating costs take more than 65% of potential rent, leaving little room for a mortgage or a surplus.", "What good looks like: a common planning shortcut is about 50% of rent for vacancy and operating costs.");
+  }
+  function kpisFrom(result, s) {
+    const rent = result.rent;
+    const onePct = (s.price > 0) ? rent / s.price : 0;
+    const exp = (result.gpi > 0) ? (result.gpi - result.noim) / result.gpi : 0;
+    const dscr = result.dscrl;
+    return [
+      {key:"cf", label:"Monthly cash flow", value: result.cfm, display: fmtUsd(result.cfm, 0), rate: rateCashFlow(result.cfm)},
+      {key:"coc", label:"Cash-on-cash return", value: result.coc, display: typeof result.coc === "number" ? fmtPct(result.coc, 2) : result.coc, rate: rateCoc(result.coc)},
+      {key:"cap", label:"Cap rate", value: result.cap, display: fmtPct(result.cap, 2), rate: rateCap(result.cap)},
+      {key:"dscr", label:"DSCR (rent ÷ PITIA)", value: dscr, display: typeof dscr === "number" ? fmtX(dscr) : "n/a", rate: rateDscr(typeof dscr === "number" ? dscr : null)},
+      {key:"one", label:"1% rule (rent ÷ price)", value: onePct, display: fmtPct(onePct, 2), rate: rateOnePct(onePct)},
+      {key:"exp", label:"Expense ratio", value: exp, display: fmtPct(exp, 1), rate: rateExpense(exp)}
+    ];
+  }
+  const API = {LOANS, MAX_UNITS, defaultState, loanById, rentTotal, toEngineInput, computeSnapshot, kpisFrom, fmtUsd, fmtPct, fmtX, bandUsd0, bandRatio, bandX, rateCashFlow, rateCoc, rateCap, rateDscr, rateOnePct, rateExpense};
+  if (typeof module !== "undefined" && module.exports) module.exports = API;
+  root.RentalSnapshotCore = API;
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const RA = window.RentalAnalyzer;
+  const C = window.RentalSnapshotCore;
+  const STORE = "rbi-rental-analyzer-v2";
+  let state = C.defaultState();
+
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
+
+  function fillSegs() {
+    const us = $("#unit-seg");
+    us.innerHTML = "";
+    for (let n = 1; n <= 4; n++) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = String(n);
+      b.setAttribute("aria-pressed", state.unitCount === n ? "true" : "false");
+      b.addEventListener("click", () => setUnitCount(n));
+      us.appendChild(b);
+    }
+    const ls = $("#loan-seg");
+    ls.innerHTML = "";
+    for (const loan of C.LOANS) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = loan.label;
+      const fhaBlocked = loan.id === "fha" && state.unitCount > 4;
+      b.disabled = fhaBlocked;
+      b.setAttribute("aria-disabled", fhaBlocked ? "true" : "false");
+      b.setAttribute("aria-pressed", state.loanType === loan.id ? "true" : "false");
+      if (fhaBlocked) b.title = "FHA house hack is only available for 1–4 units.";
+      b.addEventListener("click", () => { if (!b.disabled) setLoan(loan.id); });
+      ls.appendChild(b);
     }
   }
-  function nestGet(obj, path) {
-    return path.split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
-  }
-  function clsForPass(v) { return v === "PASS" ? "okpill" : v === "FAIL" ? "failpill" : "na"; }
 
-  function programByName(name) {
-    return state.programs.find(p => p.name === name) || state.programs[0];
-  }
-
-  function buildLoanOptions(sel, current) {
-    sel.innerHTML = "";
-    for (const p of state.programs) {
-      const o = document.createElement("option");
-      o.value = p.name; o.textContent = p.name;
-      if (p.name === current) o.selected = true;
-      sel.appendChild(o);
+  function enforceLoanForUnits() {
+    if (state.unitCount > 4 && state.loanType === "fha") {
+      const loan = C.loanById("conventional");
+      state.loanType = "conventional";
+      state.down = loan.down;
+      state.rate = loan.rate;
+      state.term = loan.term;
+      return true;
     }
+    return false;
   }
 
-  function buildRentRoll() {
-    const tb = $("#rent-roll tbody");
-    tb.innerHTML = "";
-    for (let i = 0; i < 20; i++) {
-      const u = state.unitsRoll[i] || {beds:"",baths:"",current:"",market:""};
-      const tr = document.createElement("tr");
-      const empty = u.beds==="" && u.baths==="" && u.current==="" && u.market==="";
-      if (i>0 && empty) tr.classList.add("empty-unit");
-      tr.innerHTML = `<td class="left">${i+1}</td>
-        <td><input type="number" data-unit-row="${i}" data-unit-field="beds" min="0" step="0.5" value="${esc(u.beds)}"></td>
-        <td><input type="number" data-unit-row="${i}" data-unit-field="baths" min="0" step="0.5" value="${esc(u.baths)}"></td>
-        <td><input type="number" data-unit-row="${i}" data-unit-field="current" min="0" step="1" value="${esc(u.current)}"></td>
-        <td><input type="number" data-unit-row="${i}" data-unit-field="market" min="0" step="1" value="${esc(u.market)}"></td>`;
-      tb.appendChild(tr);
+  function setUnitCount(n) {
+    n = Math.max(1, Math.min(C.MAX_UNITS, Math.round(n)));
+    state.unitCount = n;
+    while (state.rents.length < n) state.rents.push("");
+    const switched = enforceLoanForUnits();
+    renderUnits();
+    fillSegs();
+    fillInputs();
+    recalc();
+    persist();
+    return switched;
+  }
+
+  function setLoan(id) {
+    const loan = C.loanById(id);
+    state.loanType = id;
+    state.down = loan.down;
+    state.rate = loan.rate;
+    state.term = loan.term;
+    fillInputs();
+    fillSegs();
+    recalc();
+    persist();
+  }
+
+  function renderUnits() {
+    const box = $("#unit-rows");
+    box.innerHTML = "";
+    for (let i = 0; i < state.unitCount; i++) {
+      const row = document.createElement("div");
+      row.className = "unit-row";
+      const id = "rent-" + i;
+      const val = state.rents[i] == null || state.rents[i] === "" ? "" : state.rents[i];
+      row.innerHTML = `<label for="${id}">Unit ${i + 1}</label>
+        <input type="number" id="${id}" min="0" step="1" inputmode="decimal" data-rent="${i}" value="${val}" aria-label="Monthly rent, unit ${i + 1}">`;
+      box.appendChild(row);
     }
-  }
-
-  function esc(v) { return v == null || v === "" ? "" : String(v).replace(/"/g, "&quot;"); }
-
-  function displayValue(name, raw, input) {
-    if (input && input.dataset.unit === "pct") {
-      const places = Number(input.dataset.places || 2);
-      return raw == null || raw === "" ? "" : (Number(raw) * 100).toFixed(places).replace(/\.?0+$/, m => m.includes(".") ? m.replace(/0+$/,"").replace(/\.$/,"") : m);
-    }
-    return raw == null ? "" : String(raw);
-  }
-
-  function parseField(input, raw) {
-    if (raw === "") return input.name === "propName" || input.name === "rentSource" || input.name === "loanChoice" ? "" : (input.dataset.unit === "pct" ? 0 : 0);
-    if (input.name === "propName" || input.name === "rentSource" || input.name === "loanChoice") return raw;
-    const n = Number(raw);
-    if (!isFinite(n)) return 0;
-    if (input.dataset.unit === "pct") return n / 100;
-    return n;
+    $("#btn-remove-unit").hidden = state.unitCount <= 4;
+    const more = state.unitCount > 4;
+    $$("#unit-seg button").forEach((b, i) => {
+      b.setAttribute("aria-pressed", (!more && state.unitCount === i + 1) ? "true" : "false");
+    });
   }
 
   function fillInputs() {
-    $$("#inputs [name]").forEach(el => {
-      if (el.name === "loanChoice") return;
+    $$("#inputs [name], .more-body [name]").forEach(el => {
       const v = state[el.name];
-      if (el.dataset.unit === "pct") {
+      if (el.name === "balloon") {
+        el.value = v ? String(v) : "";
+      } else if (el.dataset.unit === "pct") {
         const places = Number(el.dataset.places || 2);
-        el.value = v == null || v === "" ? "" : (Number(v) * 100).toFixed(places);
+        el.value = v == null ? "" : (Number(v) * 100).toFixed(places);
       } else {
         el.value = v == null ? "" : v;
       }
     });
-    const sel = $("#loan-choice");
-    buildLoanOptions(sel, state.loanChoice);
-    buildOverrides();
-    buildProgramsTable();
+    renderUnits();
+    $("#loan-hint").textContent = C.loanById(state.loanType).hint;
+    const cash = state.loanType === "cash";
+    $("[name=rate]").disabled = cash;
+    $("[name=term]").disabled = cash;
+    $("[name=down]").disabled = cash;
+    const ball = $("[name=balloon]");
+    if (ball) ball.disabled = cash;
   }
 
-  function buildOverrides() {
-    const tb = $("#overrides tbody");
-    tb.innerHTML = "";
-    const prog = programByName(state.loanChoice);
-    for (const [key, label, kind] of OVR_KEYS) {
-      const tr = document.createElement("tr");
-      const def = prog[key];
-      let defText;
-      if (kind === "pct") defText = fmtPct(Number(def), key === "miltv" ? 1 : 3);
-      else if (kind === "usd") defText = fmtUsd(Number(def), 0);
-      else defText = String(def);
-      const ovr = state.overrides[key];
-      let control;
-      if (kind === "basis") {
-        control = `<select data-ovr="${key}" class="ovr-input"><option value=""></option>
-          <option value="Purchase"${ovr==="Purchase"?" selected":""}>Purchase</option>
-          <option value="ARV Refi"${ovr==="ARV Refi"?" selected":""}>ARV Refi</option></select>`;
-      } else {
-        const places = kind === "pct" ? (key === "miltv" ? 1 : 3) : (kind === "usd" ? 2 : 0);
-        const shown = isBlank(ovr) ? "" : (kind === "pct" ? (Number(ovr)*100).toFixed(places) : ovr);
-        control = `<input type="number" step="any" data-ovr="${key}" class="ovr-input" value="${esc(shown)}">`;
-      }
-      tr.innerHTML = `<td class="left">${label}</td><td>${defText}</td><td class="ovr">${control}</td>`;
-      tb.appendChild(tr);
-    }
-    const note = $("#program-note");
-    const bits = [];
-    if (prog.category) bits.push(`<strong>${prog.category}</strong>`);
-    bits.push("Example defaults only — not a rate quote or offered terms.");
-    if (prog.prepay) bits.push(`Typical prepayment terms (descriptive, not priced): ${prog.prepay}`);
-    if (prog.notes) bits.push(prog.notes);
-    note.innerHTML = bits.join(" ");
-  }
-
-  function buildProgramsTable() {
-    const wrap = $("#programs-wrap");
-    let html = `<table class="sticky-col"><thead><tr><th class="left">Loan type</th>`;
-    for (const [, lab] of PROG_FIELDS) html += `<th>${lab}</th>`;
-    html += `</tr></thead><tbody>`;
-    state.programs.forEach((p, i) => {
-      html += `<tr><td class="left">${p.name}</td>`;
-      for (const [key, , kind] of PROG_FIELDS) {
-        if (kind === "basis") {
-          html += `<td><select data-prog="${i}" data-pkey="${key}"><option value="Purchase"${p.basis==="Purchase"?" selected":""}>Purchase</option><option value="ARV Refi"${p.basis==="ARV Refi"?" selected":""}>ARV Refi</option></select></td>`;
-        } else if (kind === "text") {
-          html += `<td><input type="text" data-prog="${i}" data-pkey="${key}" value="${esc(p[key])}"></td>`;
-        } else if (kind.startsWith("pct")) {
-          const pl = Number(kind.replace("pct","")) || 2;
-          html += `<td><input type="number" step="any" data-prog="${i}" data-pkey="${key}" data-unit="pct" data-places="${pl}" value="${(Number(p[key])*100).toFixed(pl)}"></td>`;
-        } else {
-          html += `<td><input type="number" step="any" data-prog="${i}" data-pkey="${key}" value="${esc(p[key])}"></td>`;
-        }
-      }
-      html += `</tr>`;
-    });
-    html += `</tbody></table>`;
-    wrap.innerHTML = html;
+  function parseField(el) {
+    const n = Number(el.value);
+    if (el.value === "" || !isFinite(n)) return 0;
+    return el.dataset.unit === "pct" ? n / 100 : n;
   }
 
   function gather() {
-    $$("#inputs [name]").forEach(el => {
-      if (el.closest("#overrides") || el.closest("#programs-wrap") || el.hasAttribute("data-unit-row")) return;
-      state[el.name] = parseField(el, el.value);
+    $$("#inputs [name], .more-body [name]").forEach(el => {
+      if (el.name && Object.prototype.hasOwnProperty.call(state, el.name)) state[el.name] = parseField(el);
     });
-    state.loanChoice = $("#loan-choice").value;
-    $$("[data-unit-row]").forEach(el => {
-      const i = Number(el.dataset.unitRow);
-      if (!state.unitsRoll[i]) state.unitsRoll[i] = {beds:"",baths:"",current:"",market:""};
-      const raw = el.value;
-      const v = raw === "" ? "" : Number(raw);
-      state.unitsRoll[i][el.dataset.unitField] = v;
+    $$("[data-rent]").forEach(el => {
+      const i = Number(el.dataset.rent);
+      state.rents[i] = el.value === "" ? "" : Number(el.value);
     });
-    $$("#rent-roll tbody tr").forEach((tr,i) => {
-      const u = state.unitsRoll[i] || {};
-      const empty = (u.beds===""||u.beds==null) && (u.baths===""||u.baths==null) && (u.current===""||u.current==null) && (u.market===""||u.market==null);
-      tr.classList.toggle("empty-unit", i>0 && empty);
-    });
-    const ovr = {};
-    $$("[data-ovr]").forEach(el => {
-      if (el.value === "") return;
-      const key = el.dataset.ovr;
-      if (key === "basis") ovr[key] = el.value;
-      else {
-        const meta = OVR_KEYS.find(k => k[0] === key);
-        const n = Number(el.value);
-        if (!isFinite(n)) return;
-        ovr[key] = meta && meta[2] === "pct" ? n / 100 : n;
-      }
-    });
-    state.overrides = ovr;
-    $$("[data-prog]").forEach(el => {
-      const i = Number(el.dataset.prog);
-      const key = el.dataset.pkey;
-      if (!state.programs[i]) return;
-      if (key === "basis" || el.dataset.pkey === "category" || el.type === "text") {
-        state.programs[i][key] = el.value;
-      } else if (el.dataset.unit === "pct") {
-        state.programs[i][key] = Number(el.value) / 100;
-      } else {
-        state.programs[i][key] = Number(el.value);
-      }
-    });
-    const cmp = $$("#tbl-compare thead select").map(s => s.value);
-    if (cmp.length) state.compareLoans = cmp;
   }
 
-  function row(label, value, kind, opts) {
-    opts = opts || {};
-    const extra = opts.key ? " key" : "";
-    let cell = fmt(value, kind);
-    if (kind === "pass") cell = `<span class="${clsForPass(value)}">${value}</span>`;
-    const trClass = opts.key ? ' class="keyrow-tr"' : '';
-    if (kind !== "pass" && kind !== "text" && typeof value === "number" && value < 0) {
-      return `<tr${trClass}><td class="left">${label}</td><td class="neg${extra}">${cell}</td></tr>`;
-    }
-    return `<tr${trClass}><td class="left">${label}</td><td class="${extra}">${cell}</td></tr>`;
+  function renderKpis(list) {
+    $("#kpis").innerHTML = list.map(k => `<article class="kpi ${k.rate.tone}">
+        <div class="label">${k.label}</div>
+        <div class="value">${k.display}</div>
+        <span class="rating">${k.rate.rating}</span>
+        <p class="mean">${k.rate.mean}</p>
+        <p class="bench">${k.rate.bench}</p>
+      </article>`).join("");
   }
 
-  function renderOutputs(r) {
-    const beds = state.unitsRoll.reduce((s,u)=>s+Number(u.beds||0),0);
-    const baths = state.unitsRoll.reduce((s,u)=>s+Number(u.baths||0),0);
-    const bag = Object.assign({propName: state.propName, loanName: r.terms.name, bedsTotal: beds, bathsTotal: baths}, r);
-    $$("[data-out]").forEach(el => {
-      const v = nestGet(bag, el.dataset.out);
-      const kind = el.dataset.fmt;
-      if (kind === "pass") {
-        el.className = clsForPass(v);
-        el.textContent = v == null ? "" : v;
-      } else {
-        el.textContent = fmt(v, kind);
-      }
-    });
-    $$("[data-kpi]").forEach(el => {
-      const key = el.dataset.kpi;
-      const v = nestGet(r, key);
-      el.classList.remove("ok","fail","neg");
-      if (v === "PASS") el.classList.add("ok");
-      else if (v === "FAIL") el.classList.add("fail");
-      else if (typeof v === "number" && v < 0) el.classList.add("neg");
-    });
-
-    $("#tbl-sizing").innerHTML =
-      row("Base loan amount", r.loanbase, "usd") +
-      row("Upfront MI/MIP financed", r.ufmid, "usd") +
-      row("Total loan amount", r.loan, "usd") +
-      row("Loan-to-value (base loan / value)", r.ltv, "pct1") +
-      row("Down payment", r.downd, "usd") +
-      row("Points / origination ($)", r.pointsd, "usd") +
-      row("HELOC/bridge carrying cost until refi (BRRRR)", r.heloc, "usd") +
-      row("Cash needed at purchase", r.cashclose, "usd") +
-      row("Net refinance proceeds (BRRRR)", r.refinet, "usd") +
-      row("Total cash invested (cash left in the deal)", r.cashin, "usd", {key:true});
-
-    $("#tbl-pmt").innerHTML =
-      row("Monthly P&I (year 1; interest-only if IO)", r.pi, "usd2") +
-      row("Loan balance at ARM reset", r.balreset == null ? "—" : r.balreset, r.balreset == null ? "text" : "usd") +
-      row("Monthly P&I after IO ends / ARM resets", r.pi2, "usd2") +
-      row("Payment change happens in year", r.pi2when, "num") +
-      row("Balloon payment due (est.)", r.balloond, "usd") +
-      row("Monthly MI / MIP (year 1)", r.mim, "usd2") +
-      row("2nd mortgage P&I (monthly)", r.pi2nd, "usd2") +
-      row("Monthly property tax", r.taxm, "usd2") +
-      row("Monthly insurance", r.insm, "usd2") +
-      row("PITIA (P&I + MI + 2nd + tax + insurance + HOA)", r.pitia, "usd2", {key:true});
-
-    $("#tbl-inc").innerHTML =
-      row("Gross scheduled rent (less owner unit if house hack)", r.grent, "usd") +
-      row("Other income", r.oinc, "usd") +
-      row("Gross potential income", r.gpi, "usd") +
-      row("Vacancy and credit loss", r.vac, "usd") +
-      row("Effective gross income", r.egi, "usd") +
-      row("Operating expenses", r.opex, "usd", {key:true}) +
-      row("NOI (monthly)", r.noim, "usd", {key:true}) +
-      row("Mortgage per month (P&I + MI + 2nd mortgage)", r.dsm, "usd", {key:true}) +
-      row("Cash flow (monthly)", r.cfm, "usd", {key:true});
-
-    $("#tbl-metrics").innerHTML =
-      row("NOI (annual)", r.noia, "usd") +
-      row("Annual debt service", r.dsa, "usd") +
-      row("Cash flow (annual)", r.cfa, "usd") +
-      row("Cap rate (NOI / purchase price)", r.cap, "pct") +
-      row("Cap rate on all-in cost", r.capall, "pct") +
-      row("Cash-on-cash return", r.coc, typeof r.coc === "number" ? "pct" : "text") +
-      row("DSCR — NOI method (NOI / debt service)", r.dscrn, typeof r.dscrn === "number" ? "x" : "text") +
-      row("  vs. NOI minimum", r.dscrnp, "pass") +
-      row("DSCR — lender method (gross rent / PITIA)", r.dscrl, typeof r.dscrl === "number" ? "x" : "text") +
-      row("  vs. lender minimum", r.dscrlp, "pass") +
-      row("Break-even occupancy", r.beo, "pct1") +
-      row("Gross rent multiplier (price / annual gross rent)", r.grm, "x") +
-      row("1% rule (monthly rent / (price + rehab))", r.onepct, "pct") +
-      row("  1% rule check", r.onepctp, "pass") +
-      row("Operating expense ratio (opex / EGI)", r.expr, "pct1") +
-      row("Loan-to-cost (base loan / (price + rehab))", r.ltc, "pct1") +
-      row("1st loan balance after 5 years (est.)", r.bal5, typeof r.bal5 === "number" ? "usd" : "text") +
-      row("Equity after 5 years", r.eq5, r.eq5 === "" ? "text" : "usd") +
-      row("Prepayment penalty (typical, descriptive only)", r.terms.prepay || "—", "text");
-
-    renderProforma(r);
-    renderFiveYear(r);
-    renderGrowth(r);
-    renderCompare(r);
-    renderAmort(r);
-    renderProjection(r);
-    drawCharts(r);
-  }
-
-  function td(v, kind, extra) {
-    extra = extra || "";
-    if (kind === "pass") return `<td class="${extra}"><span class="${clsForPass(v)}">${v}</span></td>`;
-    const neg = (kind !== "text" && typeof v === "number" && v < 0) ? " neg" : "";
-    return `<td class="${extra}${neg}">${fmt(v, kind)}</td>`;
-  }
-
-  function renderProforma(r) {
-    const rows = [
-      ["Gross scheduled rent","grent","usd"],
-      ["Other income","other","usd"],
-      ["Vacancy and credit loss","vacancy","usd"],
-      ["Effective gross income","egi","usd"],
-      ["Property tax","tax","usd2"],
-      ["Insurance","ins","usd2"],
-      ["HOA","hoa","usd2"],
-      ["Utilities (owner-paid)","utilities","usd2"],
-      ["Lawn care / snow removal","lawn","usd2"],
-      ["Other expenses","other_exp","usd2"],
-      ["Maintenance","maint","usd2"],
-      ["CapEx reserve","capex","usd2"],
-      ["Property management","mgmt","usd2"],
-      ["TOTAL OPERATING EXPENSES","opex","usd2","key"],
-      ["Net operating income (NOI)","noi","usd2"],
-      ["MORTGAGE PER MONTH","dsm","usd2","key"],
-      ["Monthly cash flow","cfm","usd2"],
-      ["Annual cash flow","cfa","usd"],
-      ["Cash-on-cash return","coc","pct"],
-      ["Cap rate (NOI / price)","cap","pct"],
-      ["DSCR (NOI / debt service)","dscrn","x"],
-      ["DSCR (rent / PITIA)","dscrl","x"],
-      ["Break-even occupancy","beo","pct1"],
-      ["GRM (price / annual rent)","grm","x"],
-      ["1% rule (rent / (price + rehab))","onepct","pct"]
+  function renderSnap(r) {
+    const y5 = r.projection && r.projection[4];
+    if (!y5) { $("#snap").innerHTML = ""; return; }
+    const items = [
+      ["Estimated value, year 5", C.fmtUsd(y5.value, 0)],
+      ["Loan balance, year 5", C.fmtUsd(y5.balance, 0)],
+      ["Equity, year 5", C.fmtUsd(y5.equity, 0)],
+      ["Cash flow collected, years 1–5", C.fmtUsd(y5.cum_cf, 0)]
     ];
-    let h = `<thead><tr><th class="left">Item</th><th>Current</th><th>Pro forma (market)</th></tr></thead><tbody>`;
-    for (const [lab,k,kind,extra] of rows) {
-      const ck = kind === "pct" && typeof r.current[k] !== "number" ? "text" : kind;
-      const pk = kind === "pct" && typeof r.proforma[k] !== "number" ? "text" : kind;
-      const xk = kind === "x" && typeof r.current[k] !== "number" ? "text" : ck;
-      const xp = kind === "x" && typeof r.proforma[k] !== "number" ? "text" : pk;
-      h += `<tr><td class="left">${lab}</td>${td(r.current[k], xk, extra||"")}${td(r.proforma[k], xp, extra||"")}</tr>`;
-    }
-    h += `</tbody>`;
-    $("#tbl-proforma").innerHTML = h;
+    $("#snap").innerHTML = items.map(([k,v]) => `<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
   }
 
-  function fiveHead() {
-    return `<thead><tr><th class="left">Year</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>`;
-  }
-  function fiveRow(label, cells, kind, extra) {
-    let h = `<tr><td class="left">${label}</td>`;
-    for (const v of cells) h += td(v, kind, extra || "");
-    return h + `</tr>`;
-  }
-  function y5(r, key) { return r.projection.slice(0,5).map(p => p[key]); }
-
-  function renderFiveYear(r) {
-    const cashin = r.cashin;
-    const taxRoi = y5(r, "tax_savings").map(v => cashin<=0 ? "n/a" : v/cashin);
-    const payRoi = y5(r, "paydown").map(v => cashin<=0 ? "n/a" : v/cashin);
-    let cum = 0;
-    const cumPay = y5(r, "paydown").map(v => (cum += v));
-    $("#tbl-tax").innerHTML = fiveHead() + `<tbody>` +
-      fiveRow("Depreciation (27.5-yr SL)", y5(r,"depr"), "usd") +
-      fiveRow("Mortgage interest (1st + 2nd)", y5(r,"tot_int"), "usd") +
-      fiveRow("Total deductions", y5(r,"deductions"), "usd") +
-      fiveRow("Est. tax savings", y5(r,"tax_savings"), "usd") +
-      fiveRow("% annual ROI on tax savings", taxRoi, cashin<=0?"text":"pct") +
-      `</tbody>`;
-    $("#tbl-paydown").innerHTML = fiveHead() + `<tbody>` +
-      fiveRow("Principal paid (1st + 2nd)", y5(r,"paydown"), "usd") +
-      fiveRow("Cumulative paydown", cumPay, "usd") +
-      fiveRow("Loan balance EOY (all loans)", y5(r,"balance"), "usd") +
-      fiveRow("% ROI on paydown", payRoi, cashin<=0?"text":"pct") +
-      `</tbody>`;
-    const totRoi = y5(r,"total_roi");
-    let cRet = 0;
-    const cumRet = y5(r,"total_return").map(v => (cRet += v));
-    $("#tbl-roi").innerHTML = fiveHead() + `<tbody>` +
-      fiveRow("Cash flow", y5(r,"cf"), "usd") +
-      fiveRow("Debt paydown", y5(r,"paydown"), "usd") +
-      fiveRow("Tax savings (est.)", y5(r,"tax_savings"), "usd") +
-      fiveRow("Appreciation", y5(r,"appr_gain"), "usd") +
-      fiveRow("TOTAL RETURN $", y5(r,"total_return"), "usd", "key") +
-      fiveRow("TOTAL ROI %", totRoi, cashin<=0?"text":"pct", "okcell") +
-      fiveRow("Cumulative return $", cumRet, "usd") +
-      `</tbody>`;
-  }
-
-  function renderGrowth(r) {
-    let h = `<thead><tr><th>Year</th><th>Monthly rent</th><th>Annual rent</th></tr></thead><tbody>`;
-    for (const row of r.rentTable) h += `<tr><td>${row.year}</td>${td(row.monthly,"usd")}${td(row.annual,"usd")}</tr>`;
-    $("#tbl-rentg").innerHTML = h + `</tbody>`;
-    h = `<thead><tr><th>Year</th><th>Est. value</th><th>Annual gain $</th><th>Annual gain %</th></tr></thead><tbody>`;
-    h += `<tr><td>Today</td>${td(r.valueBasis,"usd")}<td>—</td><td>—</td></tr>`;
-    for (const row of r.apprTable) h += `<tr><td>${row.year}</td>${td(row.value,"usd")}${td(row.gain,"usd")}${td(row.gain_pct,"pct")}</tr>`;
-    $("#tbl-appr").innerHTML = h + `</tbody>`;
-  }
-
-  function renderCompare() {
-    const names = (state.compareLoans && state.compareLoans.length)
-      ? state.compareLoans
-      : RA.DEFAULT_INPUTS.compareLoans;
-    const cols = RA.compare(Object.assign({}, state, {programs: state.programs}), names, state.programs);
-    const metrics = [
-      ["Down payment %","terms.down","pct1"],
-      ["Example interest rate","terms.rate","pct"],
-      ["ARM fixed period (yrs)","terms.armfix","num"],
-      ["Example ARM reset rate","terms.armrate","pct"],
-      ["Interest-only period (yrs)","terms.io","num"],
-      ["Amortization (yrs)","terms.amort","num"],
-      ["Balloon due (yr)","terms.balloon","num"],
-      ["Points / origination %","terms.points","pct"],
-      ["Lender and loan fees","terms.fees","usd"],
-      ["Base loan amount","loanbase","usd"],
-      ["Total loan amount","loan","usd"],
-      ["LTV","ltv","pct1"],
-      ["Down payment $","downd","usd"],
-      ["Cash invested","cashin","usd"],
-      ["Monthly P&I (year 1)","pi","usd2"],
-      ["P&I after IO / ARM reset","pi2","usd2"],
-      ["Monthly MI / MIP","mim","usd2"],
-      ["2nd mortgage P&I","pi2nd","usd2"],
-      ["PITIA","pitia","usd2"],
-      ["NOI (monthly)","noim","usd"],
-      ["Mortgage per month","dsm","usd"],
-      ["Monthly cash flow","cfm","usd"],
-      ["Annual cash flow","cfa","usd"],
-      ["Cap rate","cap","pct"],
-      ["Cash-on-cash","coc","pct"],
-      ["DSCR (NOI method)","dscrn","x"],
-      ["  vs. NOI minimum","dscrnp","pass"],
-      ["DSCR (rent / PITIA)","dscrl","x"],
-      ["  vs. lender minimum","dscrlp","pass"],
-      ["Break-even occupancy","beo","pct1"],
-      ["5-year loan balance","bal5","usd"],
-      ["IRR at hold period","hold.irr","pct"]
-    ];
-    let h = `<thead><tr><th class="left">Loan type</th>`;
-    names.forEach((n,i) => {
-      h += `<th><select data-cmp="${i}" class="compare-head">`;
-      for (const p of state.programs) h += `<option value="${p.name}"${p.name===n?" selected":""}>${p.name}</option>`;
-      h += `</select></th>`;
-    });
-    h += `</tr></thead><tbody>`;
-    for (const [lab, path, kind] of metrics) {
-      h += `<tr><td class="left">${lab}</td>`;
-      for (const c of cols) {
-        const v = nestGet(c, path);
-        const k = (kind === "pct" || kind === "x" || kind === "usd") && typeof v !== "number" ? "text" : kind;
-        h += td(v, k);
+  function recalc() {
+    const out = C.computeSnapshot(state);
+    renderKpis(out.kpis);
+    renderSnap(out.result);
+    const n = state.unitCount;
+    $("#rent-total").textContent = n + (n === 1 ? " unit" : " units") + " · Total monthly rent " + C.fmtUsd(out.rentTotal, 0);
+    $("#fha-note").hidden = state.loanType !== "fha";
+    const switchedNote = $("#fha-block-note");
+    if (switchedNote) {
+      // Visible whenever 5+ units (FHA is unavailable). Wording covers a just-switched case too.
+      switchedNote.hidden = state.unitCount <= 4;
+      if (state.unitCount > 4) {
+        switchedNote.textContent = "FHA house hack is for 1–4 unit properties, so it isn’t available for this building.";
       }
-      h += `</tr>`;
     }
-    h += `</tbody>`;
-    $("#tbl-compare").innerHTML = h;
-  }
-
-  function renderAmort(r) {
-    let h = `<thead><tr><th>Year</th><th>P&I paid</th><th>Interest</th><th>Principal</th><th>MI / MIP</th><th>1st loan balance EOY</th><th>2nd mtg payments</th><th>2nd mtg balance EOY</th><th class="left">Balloon</th></tr></thead><tbody>`;
-    for (const y of r.amortYears) {
-      h += `<tr><td>${y.year}</td>${td(y.pi,"usd")}${td(y.interest,"usd")}${td(y.principal,"usd")}${td(y.mi,"usd")}${td(y.end,"usd")}${td(y.sec_pay,"usd")}${td(y.sec_end,"usd")}<td class="left">${y.balloon||""}</td></tr>`;
+    const multi = $("#multi-note");
+    if (multi) multi.hidden = !(state.unitCount > 4 && (state.loanType === "conventional" || state.loanType === "dscr"));
+    const feesNote = state.loanType === "cash"
+      ? "Cash invested is the price plus closing costs and any upfront rehab / CapEx."
+      : "Cash invested includes the down payment, closing costs, any upfront rehab / CapEx, and example loan points and fees. The ongoing monthly maintenance + CapEx reserve is a separate operating cost, not added here.";
+    const rehabBit = state.rehab > 0 ? " Upfront rehab / CapEx of " + C.fmtUsd(state.rehab, 0) + " is included." : "";
+    $("#cash-line").textContent = "Cash you put in: " + C.fmtUsd(out.result.cashin, 0) + "." + rehabBit + " " + feesNote;
+    const flag = $("#balloon-flag");
+    const yrs = Number(state.balloon) || 0;
+    const due = out.result.balloond;
+    const showBalloon = state.loanType !== "cash" && yrs > 0 && typeof due === "number" && due > 0;
+    if (flag) {
+      flag.hidden = !showBalloon;
+      if (showBalloon) {
+        flag.innerHTML = "<strong>Balloon payment.</strong> About " + C.fmtUsd(due, 0) +
+          " due at year " + yrs + " — you’d need to refinance, sell, or pay it off. " +
+          "Refinance terms aren’t guaranteed, and this estimate does not change the monthly payment, which is still based on the " +
+          state.term + "-year amortization.";
+      }
     }
-    $("#tbl-amort").innerHTML = h + `</tbody>`;
-  }
-
-  function renderProjection(r) {
-    let h = `<thead><tr><th>Year</th><th>EGI</th><th>Opex</th><th>NOI</th><th>Debt service</th><th>Cash flow</th><th>Cum. cash flow</th><th>Value (EOY)</th><th>Loan balance</th><th>Equity</th><th>Net sale proceeds</th><th>Profit if sold</th><th>IRR if sold</th><th>Equity multiple</th><th>Tax savings (est.)</th><th>Total return $</th><th>Total ROI %</th></tr></thead><tbody>`;
-    for (const y of r.projection) {
-      h += `<tr><td>${y.year}</td>${td(y.egi,"usd")}${td(y.opex,"usd")}${td(y.noi,"usd")}${td(y.ds,"usd")}${td(y.cf,"usd")}${td(y.cum_cf,"usd")}${td(y.value,"usd")}${td(y.balance,"usd")}${td(y.equity,"usd")}${td(y.net_sale,"usd")}${td(y.profit,"usd")}${td(y.irr, typeof y.irr==="number"?"pct":"text")}${td(y.equity_multiple, typeof y.equity_multiple==="number"?"x":"text")}${td(y.tax_savings,"usd")}${td(y.total_return,"usd")}${td(y.total_roi, typeof y.total_roi==="number"?"pct":"text")}</tr>`;
+    const loan = C.loanById(state.loanType);
+    const recap = $("#print-recap");
+    if (recap) {
+      const rateTxt = state.loanType === "cash" ? "cash purchase" : (C.fmtPct(state.rate, 2) + " example rate, " + state.term + "-year amortization, " + C.fmtPct(state.down, 1) + " down");
+      let extra = "";
+      if (showBalloon) extra += " · Balloon after " + yrs + " years, about " + C.fmtUsd(due, 0) + " due (refinance terms aren’t guaranteed)";
+      if (state.rehab > 0) extra += " · Upfront rehab / CapEx " + C.fmtUsd(state.rehab, 0);
+      recap.innerHTML = "<strong>Snapshot of the numbers used</strong> · Price " + C.fmtUsd(state.price, 0) +
+        " · " + state.unitCount + (state.unitCount===1?" unit":" units") +
+        " · Rent " + C.fmtUsd(out.rentTotal, 0) + "/mo · " + loan.label + " · " + rateTxt +
+        " · Cash in " + C.fmtUsd(out.result.cashin, 0) + extra + ". Example terms only, not a quote.";
     }
-    $("#tbl-proj").innerHTML = h + `</tbody>`;
+    window.__rentalV2 = Object.assign({state}, out);
+    return out.result;
   }
-
-  function drawCharts(r) {
-    const names = state.compareLoans && state.compareLoans.length ? state.compareLoans : RA.DEFAULT_INPUTS.compareLoans;
-    const cols = RA.compare(Object.assign({}, state, {programs: state.programs}), names, state.programs);
-    $("#chart-cf").innerHTML = barChart(cols.map(c => ({
-      label: shortName(c.terms.name),
-      value: c.cfm
-    })));
-    $("#chart-eq").innerHTML = lineChart([
-      {name:"Value", color:"#C2472C", values: r.projection.map(p => p.value)},
-      {name:"Balance", color:"#4A6580", values: r.projection.map(p => p.balance)},
-      {name:"Equity", color:"#1B5C2E", values: r.projection.map(p => p.equity)}
-    ]);
-  }
-
-  function shortName(n) {
-    const map = {
-      "Conventional Investment 30yr (25% down)":"Conv. 25%",
-      "Conventional Investment 30yr (15% down + PMI)":"Conv. PMI",
-      "Conventional Investment 15yr (25% down)":"Conv. 15yr",
-      "DSCR 30yr Fixed (25% down)":"DSCR fixed",
-      "DSCR Interest-Only (10yr IO, then 30yr amort)":"DSCR IO",
-      "7/1 ARM Investment (25% down)":"7/1 ARM",
-      "FHA 2-4 Unit House Hack (3.5% down)":"FHA",
-      "Seller Financing (10% down, 5yr balloon)":"Seller",
-      "Cash Purchase (no loan)":"Cash",
-      "BRRRR: Cash/HELOC buy + DSCR cash-out refi (75% ARV)":"BRRRR",
-      "Custom A":"Custom A",
-      "Custom B":"Custom B"
-    };
-    return map[n] || n.replace("Conventional Investment ","Conv. ").slice(0, 12);
-  }
-
-  function barChart(items) {
-    const W=560,H=280,p={l:52,r:10,t:18,b:56};
-    const iw=W-p.l-p.r, ih=H-p.t-p.b;
-    const vmin = Math.min(0, ...items.map(i => i.value));
-    const vmax = Math.max(0, ...items.map(i => i.value));
-    const span = Math.max(vmax - vmin, 1);
-    const yOf = v => p.t + ih * (1 - (v - vmin) / span);
-    const zero = yOf(0);
-    const bw = iw / items.length;
-    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly cash flow by loan type">`;
-    s += `<line x1="${p.l}" y1="${zero}" x2="${W-p.r}" y2="${zero}" stroke="#9AA4B0" stroke-width="1"/>`;
-    items.forEach((it,i) => {
-      const x = p.l + bw*i + bw*0.16;
-      const y = yOf(it.value);
-      const top = Math.min(y, zero), h = Math.max(Math.abs(y-zero), 1);
-      const color = it.value >= 0 ? "#1B5C2E" : "#8E2218";
-      s += `<rect x="${x}" y="${top}" width="${bw*0.68}" height="${h}" fill="${color}"/>`;
-      const cx = x + bw*0.34;
-      const parts = String(it.label).split(" ");
-      s += `<text x="${cx}" y="${H-32}" text-anchor="middle" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${escapeXml(parts[0]||"")}</text>`;
-      if (parts[1]) s += `<text x="${cx}" y="${H-18}" text-anchor="middle" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${escapeXml(parts.slice(1).join(" "))}</text>`;
-    });
-    s += `<text x="4" y="${Math.max(12,yOf(vmax)+4)}" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${fmtUsd(vmax,0)}</text>`;
-    s += `<text x="4" y="${Math.min(H-p.b, yOf(vmin)+4)}" font-size="10" fill="#4A5560" font-family="Arial,sans-serif">${fmtUsd(vmin,0)}</text>`;
-    s += `</svg>`;
-    return s;
-  }
-
-  function lineChart(series) {
-    const W=520,H=240,p={l:58,r:12,t:12,b:28};
-    const iw=W-p.l-p.r, ih=H-p.t-p.b;
-    const all = series.flatMap(s => s.values);
-    const vmin = Math.min(0, ...all), vmax = Math.max(...all, 1);
-    const span = vmax - vmin || 1;
-    const xOf = i => p.l + iw * (i / (series[0].values.length - 1));
-    const yOf = v => p.t + ih * (1 - (v - vmin) / span);
-    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="30-year value, balance and equity">`;
-    s += `<line x1="${p.l}" y1="${yOf(0)}" x2="${W-p.r}" y2="${yOf(0)}" stroke="#9AA4B0" stroke-width="1"/>`;
-    for (const ser of series) {
-      const pts = ser.values.map((v,i) => `${xOf(i)},${yOf(v)}`).join(" ");
-      s += `<polyline fill="none" stroke="${ser.color}" stroke-width="2" points="${pts}"/>`;
-    }
-    s += `<text x="4" y="${yOf(vmax)+4}" font-size="9" fill="#4A5560" font-family="Arial,sans-serif">${fmtUsd(vmax,0)}</text>`;
-    s += `<text x="${p.l}" y="${H-6}" font-size="9" fill="#4A5560" font-family="Arial,sans-serif">Year 1</text>`;
-    s += `<text x="${W-p.r}" y="${H-6}" text-anchor="end" font-size="9" fill="#4A5560" font-family="Arial,sans-serif">Year 30</text>`;
-    s += `</svg>`;
-    return s;
-  }
-  function escapeXml(t) { return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
   function persist() {
     try {
-      localStorage.setItem(STORE, JSON.stringify({
-        inputs: {
-          propName:state.propName, price:state.price, closingCosts:state.closingCosts, rehab:state.rehab,
-          arv:state.arv, units:state.units, rentSource:state.rentSource, rentManual:state.rentManual,
-          otherInc:state.otherInc, vacancy:state.vacancy, forgoneRent:state.forgoneRent,
-          propTax:state.propTax, insurance:state.insurance, hoa:state.hoa, maintPct:state.maintPct,
-          capexPct:state.capexPct, mgmtPct:state.mgmtPct, utilities:state.utilities, lawnSnow:state.lawnSnow,
-          otherExp:state.otherExp, appreciation:state.appreciation, rentGrowth:state.rentGrowth,
-          expGrowth:state.expGrowth, sellCost:state.sellCost, holdYears:state.holdYears,
-          minDscrNoi:state.minDscrNoi, minDscrLender:state.minDscrLender,
-          secAmt:state.secAmt, secRate:state.secRate, secTerm:state.secTerm, secClose:state.secClose,
-          improvedPct:state.improvedPct, taxRate:state.taxRate,
-          brrrrMonths:state.brrrrMonths, helocRate:state.helocRate, refiCosts:state.refiCosts,
-          loanChoice:state.loanChoice, overrides:state.overrides, unitsRoll:state.unitsRoll,
-          compareLoans:state.compareLoans
-        },
-        programs: state.programs
-      }));
+      localStorage.setItem(STORE, JSON.stringify(state));
       const el = $("#save-msg");
       if (el) el.textContent = "Saved on this device only. Nothing is sent anywhere.";
-    } catch (e) { /* private mode, etc. */ }
+    } catch (e) {}
   }
 
   function restore() {
@@ -1586,54 +1212,40 @@ details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padd
       const raw = localStorage.getItem(STORE);
       if (!raw) return false;
       const data = JSON.parse(raw);
-      if (data.inputs) Object.assign(state, data.inputs);
-      if (data.programs && data.programs.length === 12) state.programs = data.programs;
-      if (!state.unitsRoll || state.unitsRoll.length < 20) {
-        const u = state.unitsRoll || [];
-        while (u.length < 20) u.push({beds:"",baths:"",current:"",market:""});
-        state.unitsRoll = u;
-      }
+      if (!data || typeof data !== "object") return false;
+      state = Object.assign(C.defaultState(), data);
+      if (!Array.isArray(state.rents)) state.rents = [2350];
+      state.unitCount = Math.max(1, Math.min(C.MAX_UNITS, Number(state.unitCount) || 1));
+      while (state.rents.length < state.unitCount) state.rents.push("");
+      enforceLoanForUnits();
       return true;
     } catch (e) { return false; }
   }
 
-  function recalc() {
-    const r = RA.compute(state, {programs: state.programs, useOverrides: true});
-    renderOutputs(r);
-    return r;
-  }
-
-  function onChange(ev) {
-    if (ev && ev.target && ev.target.id === "loan-choice") {
-      gather();
-      buildOverrides();
-    } else {
-      gather();
-    }
-    recalc();
-    persist();
-  }
-
   function clearData() {
-    try { localStorage.removeItem(STORE); } catch (e) {}
-    state = RA.cloneDefaults();
-    state.programs = RA.PROGRAMS.map(p => Object.assign({}, p));
-    buildRentRoll();
+    try {
+      localStorage.removeItem(STORE);
+      localStorage.removeItem("rbi-rental-analyzer-v1");
+    } catch (e) {}
+    state = C.defaultState();
     fillInputs();
+    fillSegs();
     recalc();
     const el = $("#save-msg");
-    if (el) el.textContent = "Local data cleared. Sample figures restored.";
+    if (el) el.textContent = "Local data cleared. Example figures restored.";
   }
 
-  window.__rentalSelfTest = function () {
-    const cases = [];
-    const ver = window.__VERIFY__ || [];
-    return {compute: RA.compute, compare: RA.compare, state, programs: state.programs, result: RA.compute(state, {programs: state.programs})};
+  window.RentalSnapshot = {
+    getState() { return state; },
+    setState(s) { state = Object.assign(C.defaultState(), s); fillInputs(); fillSegs(); return recalc(); },
+    setUnitCount,
+    addUnits(n) { setUnitCount(state.unitCount + n); },
+    recalc, toEngineInput: C.toEngineInput, computeSnapshot: C.computeSnapshot
   };
 
   document.addEventListener("DOMContentLoaded", () => {
     const saved = restore();
-    buildRentRoll();
+    fillSegs();
     fillInputs();
     recalc();
     if (saved) {
@@ -1641,11 +1253,14 @@ details.advanced summary{cursor:pointer;font-weight:700;color:var(--accent);padd
       if (el) el.textContent = "Restored numbers saved on this device.";
     }
     document.addEventListener("input", ev => {
-      if (ev.target.closest("#inputs") || ev.target.closest("#tbl-compare")) onChange(ev);
+      if (ev.target.closest("#inputs") || ev.target.closest(".more-body") || ev.target.hasAttribute("data-rent")) {
+        gather();
+        recalc();
+        persist();
+      }
     });
-    document.addEventListener("change", ev => {
-      if (ev.target.closest("#inputs") || ev.target.closest("#tbl-compare")) onChange(ev);
-    });
+    $("#btn-add-unit").addEventListener("click", () => setUnitCount(state.unitCount + 1));
+    $("#btn-remove-unit").addEventListener("click", () => { if (state.unitCount > 4) setUnitCount(state.unitCount - 1); });
     $("#btn-print").addEventListener("click", () => window.print());
     $("#btn-clear").addEventListener("click", clearData);
   });
